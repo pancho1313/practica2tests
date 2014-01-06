@@ -1,12 +1,16 @@
 package com.kpbird.myactivityrecognition;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,19 +25,19 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	private PendingIntent pIntent;
 	private BroadcastReceiver receiver;
 	private TextView tvActivity;
+	private RelativeLayout backColor;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		tvActivity = (TextView) findViewById(R.id.tvActivity);
+		backColor = (RelativeLayout) findViewById(R.id.backColor);
 		
 		int resp =GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if(resp == ConnectionResult.SUCCESS){
 			arclient = new ActivityRecognitionClient(this, this, this);
 			arclient.connect();
-			
-			
 		}
 		else{
 			Toast.makeText(this, "Please install Google Play Service.", Toast.LENGTH_SHORT).show();
@@ -42,9 +46,14 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 		receiver = new BroadcastReceiver() {
 		    @Override
 		    public void onReceive(Context context, Intent intent) {
-		    	String v =  "Activity :" + intent.getStringExtra("Activity") + " " + "Confidence : " + intent.getExtras().getInt("Confidence") + "\n";
+		    	String v =  "Activity : " + intent.getStringExtra("Activity") + " " + "Confidence : " + intent.getExtras().getInt("Confidence") + "\n";
 		    	v += tvActivity.getText();
 		    	tvActivity.setText(v);
+		    	if(intent.getBooleanExtra("onBike", false)){
+		    		backColor.setBackgroundColor(Color.YELLOW);
+		    	}else{
+		    		backColor.setBackgroundColor(Color.WHITE);
+		    	}
 		    }
 		  };
 		  
@@ -79,5 +88,48 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	public void onDisconnected() {
 	}
 
-	
+	private void sendToForeground(PendingIntent pi){
+		NotificationCompat.Builder mBuilder =
+		        new NotificationCompat.Builder(this)
+		        .setSmallIcon(R.drawable.ic_launcher)
+		        .setContentTitle("My notification")
+		        .setContentText("Hello World!");
+/*
+		// Creates an explicit intent for an Activity in your app
+		Intent resultIntent = new Intent(this, ResultActivity.class);
+
+		// The stack builder object will contain an artificial back stack for the
+		// started Activity.
+		// This ensures that navigating backward from the Activity leads out of
+		// your application to the Home screen.
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		// Adds the back stack for the Intent (but not the Intent itself)
+		stackBuilder.addParentStack(ResultActivity.class);
+		// Adds the Intent that starts the Activity to the top of the stack
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent =
+		        stackBuilder.getPendingIntent(
+		            0,
+		            PendingIntent.FLAG_UPDATE_CURRENT
+		        );
+		
+		*/
+		mBuilder.setContentIntent(pi);
+		NotificationManager mNotificationManager =
+		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		// mId allows you to update the notification later on.
+		//mNotificationManager.startForeground(3333, mBuilder.build());
+		/*
+		Notification note=new Notification(R.drawable.ic_launcher,
+                "Can you hear the music?",
+                System.currentTimeMillis());
+
+note.setLatestEventInfo(this, "Fake Player",
+    "Now Playing: \"Ummmm, Nothing\"",
+    pi);
+note.flags|=Notification.FLAG_NO_CLEAR;
+
+pi.startForeground(1337, note);
+*/
+	}
 }
