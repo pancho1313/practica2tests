@@ -10,6 +10,8 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +36,9 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 		tvActivity = (TextView) findViewById(R.id.tvActivity);
 		backColor = (RelativeLayout) findViewById(R.id.backColor);
 		
+		//evitar que se apague la pantalla
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
 		int resp =GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if(resp == ConnectionResult.SUCCESS){
 			arclient = new ActivityRecognitionClient(this, this, this);
@@ -51,8 +56,10 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 		    	tvActivity.setText(v);
 		    	if(intent.getBooleanExtra("onBike", false)){
 		    		backColor.setBackgroundColor(Color.YELLOW);
+		    		Log.d("myDebug", "onBike");
 		    	}else{
 		    		backColor.setBackgroundColor(Color.WHITE);
+		    		Log.d("myDebug", "Not_Bike");
 		    	}
 		    }
 		  };
@@ -80,9 +87,10 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	}
 	@Override
 	public void onConnected(Bundle arg0) {
+		Log.d("myDebug", "onConnected");
 		Intent intent = new Intent(this, ActivityRecognitionService.class);
 		pIntent = PendingIntent.getService(this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
-		arclient.requestActivityUpdates(1000, pIntent);   
+		arclient.requestActivityUpdates(0, pIntent);   
 	}
 	@Override
 	public void onDisconnected() {

@@ -6,6 +6,7 @@ import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -21,31 +22,29 @@ import android.util.Log;
 public class ActivityRecognitionService extends IntentService	 {
 
 	private MediaPlayer myAudio;
+	private Notification noti;
 	
 	private String TAG = this.getClass().getSimpleName();
 	public ActivityRecognitionService() {
 		super("My Activity Recognition Service");
 	}
 
-	@Override
-	public void onCreate() {
-	    super.onCreate();
-
-	}
-	
+	/*
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-	    handleCommand(intent);
+	    //handleCommand(intent);
 	    // We want this service to continue running until it is explicitly
 	    // stopped, so return sticky.
 		Log.d("myDebug", "onStartCommand");
 	    return START_NOT_STICKY;
 	}
-
+	*/
 	
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.d("myDebug", "onHandle");
+		handleCommand(intent);
+		
 		if(ActivityRecognitionResult.hasResult(intent)){
 			ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
 			Log.i(TAG, getType(result.getMostProbableActivity().getType()) +"\t" + result.getMostProbableActivity().getConfidence());
@@ -54,10 +53,9 @@ public class ActivityRecognitionService extends IntentService	 {
 			i.putExtra("Confidence", result.getMostProbableActivity().getConfidence());
 			i.putExtra("onBike", onBike(result.getMostProbableActivity().getType()));
 			sendBroadcast(i);
-			Log.d("myDebug", "preplay");
-			playAudio();
-			Log.d("myDebug", "postplay");
+			//playAudio();
 		}
+		
 	}
 	
 	private String getType(int type){
@@ -131,6 +129,8 @@ public class ActivityRecognitionService extends IntentService	 {
 		PendingIntent pIntent = PendingIntent.getService(this.getApplicationContext(), 0, i,PendingIntent.FLAG_UPDATE_CURRENT);
 		mBuilder.setContentIntent(pIntent);
 		
-		this.startForeground(333, mBuilder.build());
+		noti = mBuilder.build();
+		
+		this.startForeground(333, noti);
 	}
 }
