@@ -4,5 +4,7 @@
     <string name="app_name">MyActivityRecognition</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="cancelUpdates">Cancel Updates</string>
+    <string name="requestUpdates">Start Updates</string>
 
 </resources>

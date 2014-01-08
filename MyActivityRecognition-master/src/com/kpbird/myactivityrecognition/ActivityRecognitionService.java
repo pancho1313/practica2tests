@@ -43,17 +43,25 @@ public class ActivityRecognitionService extends IntentService	 {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.d("myDebug", "onHandle");
-		handleCommand(intent);
+		//handleCommand(intent);
 		
 		if(ActivityRecognitionResult.hasResult(intent)){
 			ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
+			
+			boolean onBike = onBike(result.getMostProbableActivity().getType());
+			
 			Log.i(TAG, getType(result.getMostProbableActivity().getType()) +"\t" + result.getMostProbableActivity().getConfidence());
 			Intent i = new Intent("com.kpbird.myactivityrecognition.ACTIVITY_RECOGNITION_DATA");
 			i.putExtra("Activity", getType(result.getMostProbableActivity().getType()) );
 			i.putExtra("Confidence", result.getMostProbableActivity().getConfidence());
-			i.putExtra("onBike", onBike(result.getMostProbableActivity().getType()));
+			i.putExtra("onBike", onBike);
 			sendBroadcast(i);
-			//playAudio();
+			
+			if(onBike){
+				playAudio(result.getMostProbableActivity().getType());
+			}else{
+				playAudio(result.getMostProbableActivity().getType());
+			}
 		}
 		
 	}
@@ -82,38 +90,47 @@ public class ActivityRecognitionService extends IntentService	 {
 		return false;
 	}
 	
-	private void playAudio(){
-
+	private void playAudio(int type){
+		String audioPath = "";
+		if(type == DetectedActivity.UNKNOWN)
+			audioPath = "beep_low.mp3";
+		else if(type == DetectedActivity.IN_VEHICLE)
+			audioPath = "beep_low.mp3";
+		else if(type == DetectedActivity.ON_BICYCLE)
+			audioPath = "beep_high.mp3";
+		else if(type == DetectedActivity.ON_FOOT)
+			audioPath = "beep_low.mp3";
+		else if(type == DetectedActivity.STILL)
+			audioPath = "beep_low.mp3";
+		else if(type == DetectedActivity.TILTING)
+			audioPath = "beep_low.mp3";
+		else
+			audioPath = "beep_low.mp3";
+		
 		myAudio = new MediaPlayer();
 		AssetFileDescriptor afd;
 		try {
-			afd = getAssets().openFd("beep_low.mp3");
+			afd = getAssets().openFd(audioPath);
 			try {
 				myAudio.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.d("myDebug", "ERROR: myAudio.setDataSource()");
 			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.d("myDebug", "ERROR: myAudio.setDataSource()");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.d("myDebug", "ERROR: myAudio.setDataSource()");
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.d("myDebug", "ERROR: afd = getAssets().openFd(audioPath)");
 		}
 		
 		
 		try {
 			myAudio.prepare();
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.d("myDebug", "ERROR: myAudio.prepare()");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.d("myDebug", "ERROR: myAudio.prepare()");
 		}
 		myAudio.setLooping(false);
 		myAudio.start();

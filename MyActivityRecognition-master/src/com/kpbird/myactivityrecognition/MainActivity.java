@@ -11,7 +11,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,24 +30,29 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	private PendingIntent pIntent;
 	private BroadcastReceiver receiver;
 	private TextView tvActivity;
-	private RelativeLayout backColor;
+	private LinearLayout backColor;
+	private Button startButton;
+	private Button cancelButton;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		tvActivity = (TextView) findViewById(R.id.tvActivity);
-		backColor = (RelativeLayout) findViewById(R.id.backColor);
+		backColor = (LinearLayout) findViewById(R.id.backColor);
+		startButton = (Button) findViewById(R.id.requestUpdates);
+		cancelButton = (Button) findViewById(R.id.cancelUpdates);
 		
 		//evitar que se apague la pantalla
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
-		int resp =GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if(resp == ConnectionResult.SUCCESS){
 			arclient = new ActivityRecognitionClient(this, this, this);
 			arclient.connect();
 		}
 		else{
+			Log.d("myDebug", "NO__GooglePlayServicesAvailable");
 			Toast.makeText(this, "Please install Google Play Service.", Toast.LENGTH_SHORT).show();
 		}
 		
@@ -96,48 +104,14 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	public void onDisconnected() {
 	}
 
-	private void sendToForeground(PendingIntent pi){
-		NotificationCompat.Builder mBuilder =
-		        new NotificationCompat.Builder(this)
-		        .setSmallIcon(R.drawable.ic_launcher)
-		        .setContentTitle("My notification")
-		        .setContentText("Hello World!");
-/*
-		// Creates an explicit intent for an Activity in your app
-		Intent resultIntent = new Intent(this, ResultActivity.class);
-
-		// The stack builder object will contain an artificial back stack for the
-		// started Activity.
-		// This ensures that navigating backward from the Activity leads out of
-		// your application to the Home screen.
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		// Adds the back stack for the Intent (but not the Intent itself)
-		stackBuilder.addParentStack(ResultActivity.class);
-		// Adds the Intent that starts the Activity to the top of the stack
-		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent resultPendingIntent =
-		        stackBuilder.getPendingIntent(
-		            0,
-		            PendingIntent.FLAG_UPDATE_CURRENT
-		        );
-		
-		*/
-		mBuilder.setContentIntent(pi);
-		NotificationManager mNotificationManager =
-		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		// mId allows you to update the notification later on.
-		//mNotificationManager.startForeground(3333, mBuilder.build());
-		/*
-		Notification note=new Notification(R.drawable.ic_launcher,
-                "Can you hear the music?",
-                System.currentTimeMillis());
-
-note.setLatestEventInfo(this, "Fake Player",
-    "Now Playing: \"Ummmm, Nothing\"",
-    pi);
-note.flags|=Notification.FLAG_NO_CLEAR;
-
-pi.startForeground(1337, note);
-*/
+	public void cancelUpdates(View view) {
+		arclient.removeActivityUpdates(pIntent);
+		cancelButton.setVisibility(View.GONE);
+		startButton.setVisibility(View.VISIBLE);
+	}
+	public void requestUpdates(View view) {
+		arclient.requestActivityUpdates(0, pIntent);
+		cancelButton.setVisibility(View.VISIBLE);
+		startButton.setVisibility(View.GONE);
 	}
 }
