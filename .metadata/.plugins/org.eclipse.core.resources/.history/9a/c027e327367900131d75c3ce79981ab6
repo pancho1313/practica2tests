@@ -93,17 +93,17 @@ public class ActivityRecognitionService extends IntentService	 {
 	private void playAudio(int type){
 		String audioPath = "";
 		if(type == DetectedActivity.UNKNOWN)
-			audioPath = "i_dont_know.mp3";
+			audioPath = "beep_low.mp3";
 		else if(type == DetectedActivity.IN_VEHICLE)
-			audioPath = "on_car.mp3";
+			audioPath = "beep_low.mp3";
 		else if(type == DetectedActivity.ON_BICYCLE)
-			audioPath = "on_bicycle.mp3";
+			audioPath = "beep_high.mp3";
 		else if(type == DetectedActivity.ON_FOOT)
-			audioPath = "walking.mp3";
+			audioPath = "beep_low.mp3";
 		else if(type == DetectedActivity.STILL)
-			audioPath = "not_moving.mp3";
+			audioPath = "beep_low.mp3";
 		else if(type == DetectedActivity.TILTING)
-			audioPath = "tilting_phone.mp3";
+			audioPath = "beep_low.mp3";
 		else
 			audioPath = "beep_low.mp3";
 		
