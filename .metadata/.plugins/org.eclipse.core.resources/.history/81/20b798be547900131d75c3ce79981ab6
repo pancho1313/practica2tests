@@ -1,7 +1,8 @@
 package com.kpbird.myactivityrecognition;
 
+import java.util.Date;
+
 import android.app.Activity;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -11,6 +12,11 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +25,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.ActivityRecognitionClient;
+import com.google.android.gms.location.DetectedActivity;
 
 public class MainActivity extends Activity implements GooglePlayServicesClient.ConnectionCallbacks,GooglePlayServicesClient.OnConnectionFailedListener {
 
@@ -26,21 +33,41 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	private PendingIntent pIntent;
 	private BroadcastReceiver receiver;
 	private TextView tvActivity;
-	private RelativeLayout backColor;
+	private LinearLayout backColor;
+	private Button startButton;
+	private Button cancelButton;
+	
+	//para guardar estadisticas
+	private int lastActivityType = -1;
+	private long[] timeInTask;
+	private long lastUpdateTime;
+	private long startMillisec, endMillisec;
+	private TextView starDateTextView, endDateTextView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		tvActivity = (TextView) findViewById(R.id.tvActivity);
-		backColor = (RelativeLayout) findViewById(R.id.backColor);
+		backColor = (LinearLayout) findViewById(R.id.backColor);
+		startButton = (Button) findViewById(R.id.requestUpdates);
+		cancelButton = (Button) findViewById(R.id.cancelUpdates);
+		//estadisticas
+		starDateTextView = (TextView) findViewById(R.id.startDate);
+		endDateTextView = (TextView) findViewById(R.id.endDate);
+		timeInTask = new long[6];
 		
-		int resp =GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		
+		//evitar que se apague la pantalla
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
+		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if(resp == ConnectionResult.SUCCESS){
 			arclient = new ActivityRecognitionClient(this, this, this);
 			arclient.connect();
 		}
 		else{
+			Log.d("myDebug", "NO__GooglePlayServicesAvailable");
 			Toast.makeText(this, "Please install Google Play Service.", Toast.LENGTH_SHORT).show();
 		}
 		
@@ -50,11 +77,19 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 		    	String v =  "Activity : " + intent.getStringExtra("Activity") + " " + "Confidence : " + intent.getExtras().getInt("Confidence") + "\n";
 		    	v += tvActivity.getText();
 		    	tvActivity.setText(v);
-		    	if(intent.getBooleanExtra("onBike", false)){
+		    	
+		    	int type = intent.getIntExtra("activityType", DetectedActivity.UNKNOWN);
+		    	
+		    	if(type == DetectedActivity.ON_BICYCLE){
 		    		backColor.setBackgroundColor(Color.YELLOW);
+		    		Log.d("myDebug", "onBike");
 		    	}else{
 		    		backColor.setBackgroundColor(Color.WHITE);
+		    		Log.d("myDebug", "Not_Bike");
 		    	}
+		    	
+		    	updateTaskEstatistics(type);
+		    	
 		    }
 		  };
 		  
@@ -81,45 +116,58 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	}
 	@Override
 	public void onConnected(Bundle arg0) {
+		Log.d("myDebug", "onConnected");
 		Intent intent = new Intent(this, ActivityRecognitionService.class);
 		pIntent = PendingIntent.getService(this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
-		sendToForeground(pIntent);
-		arclient.requestActivityUpdates(1000, pIntent);   
+		//arclient.requestActivityUpdates(0, pIntent);
+		requestUpdates(null);
 	}
 	@Override
 	public void onDisconnected() {
 	}
 
-	private void sendToForeground(PendingIntent pi){
-		NotificationCompat.Builder mBuilder =
-		        new NotificationCompat.Builder(this)
-		        .setSmallIcon(R.drawable.ic_launcher)
-		        .setContentTitle("My notification")
-		        .setContentText("Hello World!");
-/*		
-		// Creates an explicit intent for an Activity in your app
-		Intent resultIntent = new Intent(this, ResultActivity.class);
-
-		// The stack builder object will contain an artificial back stack for the
-		// started Activity.
-		// This ensures that navigating backward from the Activity leads out of
-		// your application to the Home screen.
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		// Adds the back stack for the Intent (but not the Intent itself)
-		stackBuilder.addParentStack(ResultActivity.class);
-		// Adds the Intent that starts the Activity to the top of the stack
-		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent resultPendingIntent =
-		        stackBuilder.getPendingIntent(
-		            0,
-		            PendingIntent.FLAG_UPDATE_CURRENT
-		        );
-		
-		*/
-		mBuilder.setContentIntent(pi);
-		NotificationManager mNotificationManager =
-		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		// mId allows you to update the notification later on.
-		mNotificationManager.notify(333, mBuilder.build());
+	public void cancelUpdates(View view) {
+		arclient.removeActivityUpdates(pIntent);
+		cancelButton.setVisibility(View.GONE);
+		startButton.setVisibility(View.VISIBLE);
+		updateEndDate();
 	}
+	public void requestUpdates(View view) {
+		arclient.requestActivityUpdates(0, pIntent);
+		cancelButton.setVisibility(View.VISIBLE);
+		startButton.setVisibility(View.GONE);
+		updateStartDate();
+	}
+	
+	private void updateStartDate(){
+		startMillisec = System.currentTimeMillis();
+		starDateTextView.setText(new Date().toString());
+	}
+	private void updateEndDate(){
+		endMillisec = System.currentTimeMillis();
+		endDateTextView.setText(new Date().toString());
+	}
+	
+	/*
+	 * actualiza el registro de las estadisticas de actividades realizadas
+	 */
+	private void updateTaskEstatistics(int type){
+		
+		if(lastActivityType < 0){
+			lastActivityType = type;
+			lastUpdateTime = System.currentTimeMillis();
+		}else if(lastActivityType != type){
+			//calcular la diferencia de tiempo
+			long now = System.currentTimeMillis();
+			long dif = now - lastUpdateTime;
+			
+			//agregar la diferencia al contador de tiempo respectivo
+			timeInTask[type] = dif;
+			
+			//actualizar
+			lastActivityType = type;
+			lastUpdateTime = now;
+		}
+	}
+	
 }

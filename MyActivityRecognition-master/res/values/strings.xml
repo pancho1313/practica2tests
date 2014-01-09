@@ -6,5 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="cancelUpdates">Cancel Updates</string>
     <string name="requestUpdates">Start Updates</string>
+    <string name="emptyDate">--:--:--</string>
+    <string name="save">save</string>
 
 </resources>

@@ -54,7 +54,7 @@ public class ActivityRecognitionService extends IntentService	 {
 			Intent i = new Intent("com.kpbird.myactivityrecognition.ACTIVITY_RECOGNITION_DATA");
 			i.putExtra("Activity", getType(result.getMostProbableActivity().getType()) );
 			i.putExtra("Confidence", result.getMostProbableActivity().getConfidence());
-			i.putExtra("onBike", onBike);
+			i.putExtra("activityType", result.getMostProbableActivity().getType());
 			sendBroadcast(i);
 			
 			if(onBike){
@@ -66,7 +66,7 @@ public class ActivityRecognitionService extends IntentService	 {
 		
 	}
 	
-	private String getType(int type){
+	static public String getType(int type){
 		if(type == DetectedActivity.UNKNOWN)
 			return "Unknown";
 		else if(type == DetectedActivity.IN_VEHICLE)
@@ -107,7 +107,21 @@ public class ActivityRecognitionService extends IntentService	 {
 		else
 			audioPath = "beep_low.mp3";
 		
-		myAudio = new MediaPlayer();
+		if(myAudio == null){
+			myAudio = new MediaPlayer();
+			myAudio.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+				@Override
+		        public void onCompletion(MediaPlayer mp) {
+					Log.d("myDebug", "myAudio.release()");
+		        	if (myAudio != null) {
+		        		myAudio.release();
+		        		
+		        		myAudio = null;
+		            }
+		        }
+		    });
+		}
+		
 		AssetFileDescriptor afd;
 		try {
 			afd = getAssets().openFd(audioPath);

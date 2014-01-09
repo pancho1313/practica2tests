@@ -1,6 +1,9 @@
 package com.kpbird.myactivityrecognition;
 
+import java.util.Date;
+
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +11,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,23 +32,37 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	private PendingIntent pIntent;
 	private BroadcastReceiver receiver;
 	private TextView tvActivity;
-	private RelativeLayout backColor;
+	private LinearLayout backColor;
+	private Button startButton;
+	private Button cancelButton;
+	
+	//para guardar estadisticas
+	private int lastActivityType;
+	private Date startDate, endDate, lastUpdateDate;
+	private TextView starDateTextView, endDateTextView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		tvActivity = (TextView) findViewById(R.id.tvActivity);
-		backColor = (RelativeLayout) findViewById(R.id.backColor);
+		backColor = (LinearLayout) findViewById(R.id.backColor);
+		startButton = (Button) findViewById(R.id.requestUpdates);
+		cancelButton = (Button) findViewById(R.id.cancelUpdates);
+		//estadisticas
+		starDateTextView = (TextView) findViewById(R.id.startDate);
+		endDateTextView = (TextView) findViewById(R.id.endDate);
 		
-		int resp =GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		//evitar que se apague la pantalla
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
+		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 		if(resp == ConnectionResult.SUCCESS){
 			arclient = new ActivityRecognitionClient(this, this, this);
 			arclient.connect();
-			
-			arclient.toForeground();
 		}
 		else{
+			Log.d("myDebug", "NO__GooglePlayServicesAvailable");
 			Toast.makeText(this, "Please install Google Play Service.", Toast.LENGTH_SHORT).show();
 		}
 		
@@ -51,8 +74,10 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 		    	tvActivity.setText(v);
 		    	if(intent.getBooleanExtra("onBike", false)){
 		    		backColor.setBackgroundColor(Color.YELLOW);
+		    		Log.d("myDebug", "onBike");
 		    	}else{
 		    		backColor.setBackgroundColor(Color.WHITE);
+		    		Log.d("myDebug", "Not_Bike");
 		    	}
 		    }
 		  };
@@ -80,13 +105,40 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	}
 	@Override
 	public void onConnected(Bundle arg0) {
+		Log.d("myDebug", "onConnected");
 		Intent intent = new Intent(this, ActivityRecognitionService.class);
 		pIntent = PendingIntent.getService(this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
-		arclient.requestActivityUpdates(1000, pIntent);   
+		arclient.requestActivityUpdates(0, pIntent);   
 	}
 	@Override
 	public void onDisconnected() {
 	}
 
+	public void cancelUpdates(View view) {
+		arclient.removeActivityUpdates(pIntent);
+		cancelButton.setVisibility(View.GONE);
+		startButton.setVisibility(View.VISIBLE);
+	}
+	public void requestUpdates(View view) {
+		arclient.requestActivityUpdates(0, pIntent);
+		cancelButton.setVisibility(View.VISIBLE);
+		startButton.setVisibility(View.GONE);
+	}
+	
+	private void updateStartDate(){
+		startDate = new Date();
+		starDateTextView.setText(startDate.toString());
+	}
+	private void updateEndDate(){
+		endDate = new Date();
+		endDateTextView.setText(endDate.toString());
+	}
+	
+	/*
+	 * actualiza el registro de las estadisticas de actividades realizadas
+	 */
+	private void updateTaskEstatistics(int taskRecognized){
+		
+	}
 	
 }
