@@ -238,7 +238,7 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	}
 	private void updateEndDate(){
 		//ojo hay que contabilizar la ultima actividad tambien
-		updateTaskStatistics(-1);
+		updateTaskStatistics(lastActivityType);
 		endMillisec = System.currentTimeMillis();
 		endDateTextView.setText("b) "+new Date().toString());
 	}
