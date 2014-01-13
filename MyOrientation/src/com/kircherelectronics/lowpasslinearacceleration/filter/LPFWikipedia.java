@@ -36,6 +36,7 @@ import android.util.Log;
  */
 public class LPFWikipedia implements LowPassFilter
 {
+	private String TAG = "LPFWikipedia";
 	private boolean alphaStatic = false;
 
 	// Constants for the low-pass filters
@@ -81,7 +82,7 @@ public class LPFWikipedia implements LowPassFilter
 
 			// Calculate Wikipedia low-pass alpha
 			alpha = dt / (timeConstant + dt);
-
+			Log.d(TAG, "alpha: "+alpha);
 		}
 		
 		Log.d("tag", String.valueOf(alpha));

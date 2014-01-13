@@ -242,7 +242,6 @@ public class MyOrientationTest extends Activity implements SensorEventListener {
      	maxVGs = 0;
     	//refreshDisplay();
     }
-    
     private void refreshDisplay(){
     	String v =  m_vals[0]+"    "+m_vals[1]+"    "+m_vals[2]+"\n";
     	v += display.getText();

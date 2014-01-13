@@ -1,0 +1,9 @@
+package activityrecognition;
+
+public class SvmRecognizer implements IActivityRecognizer {
+
+	public int getUserRecognizedActivity(float[] features){
+		
+	}
+	
+}

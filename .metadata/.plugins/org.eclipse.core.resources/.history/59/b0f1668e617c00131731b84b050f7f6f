@@ -1,0 +1,20 @@
+package windowdata;
+
+import android.util.Log;
+
+public class WindowHalfOverlap implements IWindowData
+{
+	private String TAG = "WindowHalfOverlap";
+	
+	public boolean addSamples(float data){
+		
+	}
+	
+	public void setWindowSize(int size){
+		
+	}
+	
+	public float[] getData(){
+		
+	}
+}

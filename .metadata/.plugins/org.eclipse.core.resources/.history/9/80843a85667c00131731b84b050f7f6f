@@ -1,0 +1,7 @@
+package activitydecision;
+
+public interface IActivityRecognizer {
+
+	public int getUserRecognizedActivity(float[] features);
+	
+}

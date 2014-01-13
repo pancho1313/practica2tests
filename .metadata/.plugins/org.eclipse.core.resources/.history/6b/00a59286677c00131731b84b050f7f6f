@@ -1,0 +1,5 @@
+package activityrecognition;
+
+public class SvmRecognizer {
+
+}

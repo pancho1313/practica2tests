@@ -1,0 +1,14 @@
+package features;
+
+import windowdata.IWindowData;
+
+public class MyFeatures implements IFeatures {
+	
+	public float[] getFeatures(IWindowData windowData){
+		
+	}
+	
+	private float stDev(float mean, float[] data){
+		
+	}
+}
