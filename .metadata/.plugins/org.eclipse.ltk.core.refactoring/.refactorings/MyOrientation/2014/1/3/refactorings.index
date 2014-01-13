@@ -1,0 +1,9 @@
+1389563984118	Delete element
+1389568088553	Delete element
+1389568346289	Rename field 'sensor'
+1389568361070	Rename field 'mGravity'
+1389568927191	Rename local variable 'gValues'
+1389568952825	Rename local variable 'northDir'
+1389570811986	Rename local variable 'sensorValues'
+1389572768044	Rename local variable 'gravity'
+1389572784751	Rename local variable 'linnearAcc'
