@@ -10,7 +10,7 @@ public class WindowHalfOverlap implements IWindowData
 	private int nextIndex;
 	
 	public WindowHalfOverlap(){
-		wSize = 10;
+		wSize = 16;
 		window = new float[wSize];
 		nextIndex = 0;
 	}

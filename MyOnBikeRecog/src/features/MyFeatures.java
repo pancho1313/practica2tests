@@ -1,6 +1,7 @@
 package features;
 
 import windowdata.IWindowData;
+import features.fft.*;
 
 public class MyFeatures implements IFeatures {
 	
@@ -9,7 +10,11 @@ public class MyFeatures implements IFeatures {
 		float mean = mean(data);
 		float stdev = stDev(mean, data);
 		
-		return new float[]{mean, stdev};
+		float[] fftMag = getFFTMag(data);
+		float meanFftMag = mean(fftMag);
+		float stDevFftMag = stDev(meanFftMag, fftMag);
+		
+		return new float[]{mean, stdev, meanFftMag, stDevFftMag};
 	}
 	
 	private float stDev(float mean, float[] data){
@@ -26,5 +31,20 @@ public class MyFeatures implements IFeatures {
 			sum += d;
 		}
 		return sum/data.length;
+	}
+	
+	private float[] getFFTMag(float[] data){
+		Complex[] x = new Complex[data.length];
+		for(int i = 0; i < x.length; i++){
+			x[i] = new Complex(data[i],0);
+		}
+		
+		float[] fftMag = new float[(x.length/2)+1];
+		
+		InplaceFFT.fft(x);
+        for (int i = 0; i < fftMag.length; i++)
+        	fftMag[i] = (float) x[i].conjugate().times(x[i]).re();
+        
+        return fftMag;
 	}
 }

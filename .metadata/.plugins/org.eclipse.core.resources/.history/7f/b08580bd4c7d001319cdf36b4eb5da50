@@ -1,0 +1,9 @@
+package com.example.activityregistrator;
+
+import java.util.List;
+
+
+
+public class LinearAccelerationService extends Service implements SensorEventListener {
+    
+} 
