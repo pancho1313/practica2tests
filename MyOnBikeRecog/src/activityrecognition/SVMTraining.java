@@ -24,12 +24,14 @@ public class SVMTraining {
 	    }
 	    
 	    
-	    Long prevTimeSM, postTimeSM;
+	    Long prevTimeSM, postTimeSM, timeSD = -1;
     	int prevLabel, postLabel;
 	    if(scanSM.hasNextLine()){
 	    	scanSM.nextLine();
 	    	prevTimeSM = scanSM.nextLong();
 	    	prevLabel = scanSM.nextInt();
+	    	
+	    	scanSD.nextLine();
 	    
 	    	// find next time and label
 		    while(scanSM.hasNextLine()){
@@ -38,10 +40,9 @@ public class SVMTraining {
 		    	postLabel = scanSM.nextInt();
 		    	
 		    	// search windowData begining
-		    	// assumption: register only label>0  -->  IGNORE<0
+		    	// assumption: register only label>0  -->  IGNORE<=0
 		    	while(prevLabel > 0){
-		    		scanSM.nextLine();
-		    		Long timeSD = scanSD.nextLong();
+		    		timeSD = timeSD<0 ? scanSD.nextLong() : timeSD;
 		    		if(timeSD >= prevTimeSM){
 		    			if(timeSD <= postTimeSM){
 		    				// add x y z to windowData
@@ -50,7 +51,11 @@ public class SVMTraining {
 		    				float z = scanSD.nextFloat();
 		    				
 		    				// TODO
-		    				
+		    				if(scanSD.hasNextLine()){
+		    					timeSD = -1; // get nextLong()
+		    				}else{
+		    					break;
+		    				}
 		    			}else{
 		    				break;
 		    			}
