@@ -21,7 +21,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
 	private String TAG = ActivityRegistrator.TAG;
 	private SensorManager mSensorManager;
     private Sensor mSensor;
-    private final int sensorType = Sensor.TYPE_LINEAR_ACCELERATION;
+    private final int sensorType = Sensor.TYPE_ACCELEROMETER;//TODO Sensor.TYPE_LINEAR_ACCELERATION
     private long initTime;
     private int dataLength;
     private String[] dataCache;
@@ -32,6 +32,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     }
 
     public void onSensorChanged(SensorEvent event) {
+    	//Log.d(TAG, "onSensorChanged");
     	if (event.sensor.getType() != sensorType)
             return;
     	
@@ -46,7 +47,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     	
     	mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(sensorType);
-        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_GAME);
         
         initTime = System.currentTimeMillis();
         
@@ -77,6 +78,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     }
 
     private void updateData(float[] data){
+    	Log.d(TAG, "updateData");
     	if(dataIndex < dataLength){
     		dataCache[dataIndex] = getServiceTime() + " " + data[0] + " " + data[1] + " " + data[2];
     		dataIndex++;
@@ -87,6 +89,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     }
     
     private void saveData(){
+    	
     	Intent intent = new Intent(this, SaveFileIntentService.class);
     	String[] lastData = new String[dataIndex];
     	for(int i = 0; i < dataIndex; i++){
@@ -94,6 +97,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     	}
     	intent.putExtra("lastData", lastData);
     	startService(intent);
+    	Log.d(TAG, "pls saveData()");
     }
     
     private void handleCommand(Intent i){

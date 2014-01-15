@@ -4,11 +4,7 @@ import java.util.Date;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -16,7 +12,6 @@ import android.widget.TextView;
 
 public class ActivityRegistrator extends Activity {
 	public static final String TAG = "ActivityRegistrator";
-	private BroadcastReceiver receiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,21 +57,6 @@ public class ActivityRegistrator extends Activity {
 		TextView startDate = (TextView) findViewById(R.id.startDate);
 		startDate.setText(new Date().toString());
 	}
-	
-	private void initReciever(){
-		receiver = new BroadcastReceiver() {
-		    @Override
-		    public void onReceive(Context context, Intent intent) {
-		    	
-		    	
-		    	int type = intent.getIntExtra("activityType", 0);
-		    	
-		    }
-		  };
-		  
-		IntentFilter filter = new IntentFilter();
-		filter.addAction("com.example.activityregistrator.LINEAR_ACCELERATION_DATA");
-		registerReceiver(receiver, filter);
-	}
+
 
 }

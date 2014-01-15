@@ -13,18 +13,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/emptyDate" />
-     <TextView
+
+    <TextView
         android:id="@+id/endDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/startDate"
+        android:layout_below="@+id/startDate"
         android:text="@string/emptyDate" />
 
     <Button
         android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="23dp"
+        android:layout_below="@+id/endDate"
+        android:layout_marginTop="58dp"
+        android:layout_toRightOf="@+id/endDate"
         android:onClick="start"
         android:text="@string/start" />
 
@@ -32,10 +36,11 @@
         android:id="@+id/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="23dp"
+        android:layout_alignBaseline="@+id/start"
+        android:layout_alignBottom="@+id/start"
+        android:layout_marginLeft="68dp"
+        android:layout_toRightOf="@+id/start"
         android:onClick="stop"
         android:text="@string/stop" />
-
 
 </RelativeLayout>
