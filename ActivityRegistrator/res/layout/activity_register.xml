@@ -9,27 +9,33 @@
     tools:context=".ActivityRegistrator" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/startDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="@string/emptyDate" />
+     <TextView
+        android:id="@+id/endDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/emptyDate" />
 
     <Button
-        android:id="@+id/action"
+        android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="23dp"
-        android:onClick="action"
-        android:text="Button" />
+        android:onClick="start"
+        android:text="@string/start" />
 
-    <TextView
-        android:id="@+id/textView2"
+    <Button
+        android:id="@+id/stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:text="TextView" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="23dp"
+        android:onClick="stop"
+        android:text="@string/stop" />
+
 
 </RelativeLayout>

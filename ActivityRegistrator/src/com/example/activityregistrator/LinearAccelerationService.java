@@ -41,12 +41,12 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     @Override
     public void onCreate() {
     	dataIndex = 0;
-    	dataLength = 10;
+    	dataLength = 1000;
     	dataCache = new String[dataLength];
     	
     	mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(sensorType);
-        //mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
         
         initTime = System.currentTimeMillis();
         
@@ -57,9 +57,6 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "service starting time: ", Toast.LENGTH_SHORT).show();
         handleCommand(intent);
-
-        saveData();
-        
         return START_STICKY;
     }
 
@@ -87,20 +84,16 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     		saveData();
     		dataIndex = 0;
     	}
-    	/*
-    	Intent i = new Intent("com.example.activityregistrator.LINEAR_ACCELERATION_DATA");
-		i.putExtra("time", getType(result.getMostProbableActivity().getType()) );
-		i.putExtra("Confidence", result.getMostProbableActivity().getConfidence());
-		i.putExtra("activityType", result.getMostProbableActivity().getType());
-		i.getFloatArrayExtra("");
-		sendBroadcast(i);
-		*/
     }
     
     private void saveData(){
-    	Intent i = new Intent(this, SaveFileIntentService.class);
-    	i.putExtra("dataCache", dataCache.clone());// TODO .clone()?
-    	startService(i);
+    	Intent intent = new Intent(this, SaveFileIntentService.class);
+    	String[] lastData = new String[dataIndex];
+    	for(int i = 0; i < dataIndex; i++){
+    		lastData[i] = dataCache[i];
+    	}
+    	intent.putExtra("lastData", lastData);
+    	startService(intent);
     }
     
     private void handleCommand(Intent i){
@@ -121,7 +114,8 @@ public class LinearAccelerationService extends Service implements SensorEventLis
 		    @Override
 		    public void onReceive(Context context, Intent intent) {
 		    	
-		    	Log.d(TAG, "stop and save");
+		    	Log.d(TAG, "save and stop");
+		    	saveData();
 				stopMe();
 		    }
 		  };

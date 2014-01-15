@@ -22,7 +22,7 @@ public class SaveFileIntentService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.d(TAG, "onHandleIntent()");
-		String[] s = {"hola", "mundito"};
+		String[] s = intent.getStringArrayExtra("lastData");
 		writeToSDFile(s, "ActivityRegistrator", "test.txt");
 		Log.d(TAG, "saved file");
 	}
@@ -56,9 +56,9 @@ public class SaveFileIntentService extends IntentService {
 	        f.close();
 	    } catch (FileNotFoundException e) {
 	        e.printStackTrace();
-	        Log.d("myDebug", "******* File not found. Did you" +
+	        Log.d(TAG, "******* File not found. Did you" +
 	                " add a WRITE_EXTERNAL_STORAGE permission to the   manifest?");
-	        Log.i("WriteTextFile", "******* File not found. Did you" +
+	        Log.i(TAG, "******* File not found. Did you" +
 	                " add a WRITE_EXTERNAL_STORAGE permission to the   manifest?");
 	    } catch (IOException e) {
 	        e.printStackTrace();

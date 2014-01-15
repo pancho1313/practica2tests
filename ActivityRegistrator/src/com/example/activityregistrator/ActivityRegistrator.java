@@ -1,5 +1,7 @@
 package com.example.activityregistrator;
 
+import java.util.Date;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -9,6 +11,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class ActivityRegistrator extends Activity {
 	public static final String TAG = "ActivityRegistrator";
@@ -19,10 +23,11 @@ public class ActivityRegistrator extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
 		
-		//initReciever();
+		Button stop = (Button) findViewById(R.id.stop);
+		Button start = (Button) findViewById(R.id.start);
 		
-		Intent intent = new Intent(this, LinearAccelerationService.class);
-		startService(intent);
+		stop.setEnabled(false);
+		start.setEnabled(true);
 	}
 
 	@Override
@@ -32,9 +37,30 @@ public class ActivityRegistrator extends Activity {
 		return true;
 	}
 	
-	public void action(View v){
+	public void start(View v){
+		Intent intent = new Intent(this, LinearAccelerationService.class);
+		startService(intent);
+		stopUI();
+	}
+	
+	public void stop(View v){
 		Intent i = new Intent("com.example.activityregistrator.END_AND_SAVE");
 		sendBroadcast(i);
+		
+		TextView endDate = (TextView) findViewById(R.id.endDate);
+		endDate.setText(new Date().toString());
+	}
+	
+	private void stopUI(){
+		
+		Button stop = (Button) findViewById(R.id.stop);
+		Button start = (Button) findViewById(R.id.start);
+		
+		stop.setEnabled(true);
+		start.setEnabled(false);
+		
+		TextView startDate = (TextView) findViewById(R.id.startDate);
+		startDate.setText(new Date().toString());
 	}
 	
 	private void initReciever(){
