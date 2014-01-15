@@ -38,8 +38,8 @@ public class SVMTraining {
 		    	postLabel = scanSM.nextInt();
 		    	
 		    	// search windowData begining
-		    	// assumption: register only label>=0  -->  IGNORE<0
-		    	while(prevLabel >= 0){
+		    	// assumption: register only label>0  -->  IGNORE<0
+		    	while(prevLabel > 0){
 		    		scanSM.nextLine();
 		    		Long timeSD = scanSD.nextLong();
 		    		if(timeSD >= prevTimeSM){
