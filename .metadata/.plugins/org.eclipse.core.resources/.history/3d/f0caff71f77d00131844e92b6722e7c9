@@ -1,0 +1,60 @@
+package com.example.activityregistrator;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.Menu;
+import android.view.View;
+import android.view.WindowManager;
+
+public class ActivityMarker extends Activity {
+
+	private final int STOPPED = 0;
+	private final int STARTED = 1;
+	private int markerState;
+	private int userActivity;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_activity_marker);
+		// keep screen on
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
+		markerState = STOPPED;
+		userActivity = ActivityRegistrator.IGNORE;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.activity_marker, menu);
+		return true;
+	}
+	
+	public void startStop(View v){
+		if(markerState == STOPPED){
+			markerState = STARTED;
+		}else{
+			markerState = STOPPED;
+		}
+	}
+	public void accelerate(View v){
+		
+	}
+	public void notMoving(View v){
+		
+	}
+	public void cruise(View v){
+		
+	}
+	public void ignore(View v){
+	
+	}
+	public void breaking(View v){
+	
+	}
+	
+	private void save(){
+		
+	}
+}

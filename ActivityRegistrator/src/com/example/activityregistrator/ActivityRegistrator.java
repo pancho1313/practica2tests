@@ -7,16 +7,26 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class ActivityRegistrator extends Activity {
 	public static final String TAG = "ActivityRegistrator";
+	
+	public static final int IGNORE = 0;
+	public static final int NOT_MOVING = 1;
+	public static final int CRUISE = 2;
+	public static final int ACCELERATING = 3;
+	public static final int BREAKING = 4;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
+		
+		//keep screen on
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
 		Button stop = (Button) findViewById(R.id.stop);
 		Button start = (Button) findViewById(R.id.start);
@@ -57,6 +67,4 @@ public class ActivityRegistrator extends Activity {
 		TextView startDate = (TextView) findViewById(R.id.startDate);
 		startDate.setText(new Date().toString());
 	}
-
-
 }

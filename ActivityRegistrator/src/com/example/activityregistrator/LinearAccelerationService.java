@@ -1,5 +1,7 @@
 package com.example.activityregistrator;
 
+import java.util.Date;
+
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -47,7 +49,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     	
     	mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(sensorType);
-        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_UI);
         
         initTime = System.currentTimeMillis();
         
@@ -56,8 +58,9 @@ public class LinearAccelerationService extends Service implements SensorEventLis
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "service starting time: ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
         handleCommand(intent);
+        saveDate();
         return START_STICKY;
     }
 
@@ -78,7 +81,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     }
 
     private void updateData(float[] data){
-    	Log.d(TAG, "updateData");
+    	//Log.d(TAG, "updateData");
     	if(dataIndex < dataLength){
     		dataCache[dataIndex] = getServiceTime() + " " + data[0] + " " + data[1] + " " + data[2];
     		dataIndex++;
@@ -96,6 +99,14 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     		lastData[i] = dataCache[i];
     	}
     	intent.putExtra("lastData", lastData);
+    	startService(intent);
+    	Log.d(TAG, "pls saveData()");
+    }
+    
+    private void saveDate(){	
+    	Intent intent = new Intent(this, SaveFileIntentService.class);
+    	String[] startDate = {"T " + new Date().toString()};
+    	intent.putExtra("lastData", startDate);
     	startService(intent);
     	Log.d(TAG, "pls saveData()");
     }
@@ -131,5 +142,10 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     
     private void stopMe(){
     	this.stopSelf();
+    }
+    
+    private void checkDeadLine(){
+    	if(getServiceTime() > 60000)
+    		stopMe();
     }
 } 

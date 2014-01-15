@@ -1,0 +1,69 @@
+package com.example.activityregistrator;
+
+import android.R.color;
+import android.os.Bundle;
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.Menu;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+
+public class ActivityMarker extends Activity {
+
+	private final int STOPPED = 0;
+	private final int STARTED = 1;
+	private int markerState;
+	private int userActivity;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_activity_marker);
+		// keep screen on
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
+		markerState = STOPPED;
+		userActivity = ActivityRegistrator.IGNORE;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.activity_marker, menu);
+		return true;
+	}
+	
+	public void startStop(View v){
+		resetColors();
+		if(markerState == STOPPED){
+			markerState = STARTED;
+		}else{
+			markerState = STOPPED;
+		}
+	}
+	public void accelerate(View v){
+		resetColors();
+		((Button)v).setBackgroundColor(Color.GREEN);
+	}
+	public void notMoving(View v){
+		resetColors();
+	}
+	public void cruise(View v){
+		resetColors();
+	}
+	public void ignore(View v){
+		resetColors();
+		((Button)v).setBackgroundColor(Color.GRAY);
+	}
+	public void breaking(View v){
+		resetColors();
+		((Button)v).setBackgroundColor(Color.RED);
+	}
+	
+	private void resetColors(){
+		Button button;
+		button = (Button) findViewById(R.id.button1);
+		button.setBackgroundColor(color.background_light);
+	}
+}
