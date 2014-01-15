@@ -1,0 +1,56 @@
+package activityrecognition;
+
+
+import java.io.*;
+import java.util.*;
+
+public class SVMTraining {
+	public static void main(String[] args) {
+		String sensorDataPath = args[1];
+		String sensorMarksPath = args[2];
+	    Scanner scanSD = null, scanSM = null;
+	    File sensorData = new File(sensorDataPath);
+	    File sensorMarks = new File(sensorMarksPath);
+	    try {
+	    	scanSD = new Scanner(sensorData);
+	    } catch (FileNotFoundException e1) {
+	            e1.printStackTrace();
+	    }
+	    
+	    try {
+	    	scanSM = new Scanner(sensorMarks);
+	    } catch (FileNotFoundException e1) {
+	            e1.printStackTrace();
+	    }
+	    
+	    
+	    Long prevtimeSM = scanSM.nextLong(), postTimeSM;
+    	int prevLabel = scanSM.nextInt(), postLabel;
+	    if(scanSM.hasNextLine()){
+	    	scanSM.nextLine();
+	    	prevtimeSM = scanSM.nextLong();
+	    	prevLabel = scanSM.nextInt();
+	    }
+	    
+	    while(scanSM.hasNextLine()){
+	    	scanSM.nextLine();
+	    	Long prevtimeSM = scanSM.nextLong();
+	    	int prevLabel = scanSM.nextInt();
+
+	    	int postLabel;
+	    	if(scanSM.hasNextLine()){
+	    		
+	    	}
+	    	
+	    	// search windowData begining
+	    	while(scanSD.hasNextLine()){
+	    		Long timeSD = scanSD.nextLong();
+	    		if(timeSD){
+	    			
+	    		}
+	    	}
+	    }
+	    
+	    
+	}
+}

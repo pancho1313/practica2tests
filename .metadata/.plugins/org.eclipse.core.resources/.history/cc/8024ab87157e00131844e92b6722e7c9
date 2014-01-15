@@ -1,0 +1,11 @@
+package activityrecognition;
+
+import java.io.IOException;
+
+public class SVMTraining {
+
+	public static void main(String argv[]) throws IOException{
+		SVMTraining trainer = new SVMTraining();
+		trainer.run(argv);
+	}
+}

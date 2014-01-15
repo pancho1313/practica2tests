@@ -1,0 +1,34 @@
+package activityrecognition;
+
+
+import java.io.*;
+import java.util.*;
+
+public class SVMTraining {
+	public static void main(String[] args) {
+		String sensorDataPath = args[1];
+		String sensorMarksPath = args[2];
+	    Scanner scanSD = null, scanSM = null;
+	    File sensorData = new File(sensorDataPath);
+	    File sensorMarks = new File(sensorMarksPath);
+	    try {
+	    	scanSD = new Scanner(sensorData);
+	    } catch (FileNotFoundException e1) {
+	            e1.printStackTrace();
+	    }
+	    
+	    try {
+	    	scanSM = new Scanner(sensorMarks);
+	    } catch (FileNotFoundException e1) {
+	            e1.printStackTrace();
+	    }
+	    
+	    boolean correct = true;
+	    while(scanSM.hasNextLine() && correct){
+	    	String s = scanSM.next();
+	    	if(s.equals("T")){
+	    		
+	    	}
+	    }
+	}
+}

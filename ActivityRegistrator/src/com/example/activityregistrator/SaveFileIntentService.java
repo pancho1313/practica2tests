@@ -18,7 +18,7 @@ public class SaveFileIntentService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		Log.d(TAG, "onHandleIntent()");
 		String[] s = intent.getStringArrayExtra("lastData");
-		MyUtil.writeToSDFile(s, "ActivityRegistrator/record", "sensorData.txt", true);
+		MyUtil.writeToSDFile(s, "ActivityRegistrator/record", "sensorData_.txt", true);
 		Log.d(TAG, "saved file");
 	}
 	

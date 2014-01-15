@@ -1,0 +1,25 @@
+package activityrecognition;
+
+
+import java.io.*;
+import java.util.*;
+
+public class SVMTraining {
+	public static void main(String[] args) {
+		String sensorDataPath = args[1];
+		String sensorMarksPath = args[2];
+	    Scanner scanSD, scanSM;
+	    try {
+	    	scanSD = new Scanner(sensorDataPath);
+
+	        while(scanSD.hasNextDouble())
+	        {
+	            System.out.println( scanSD.nextDouble() );
+	        }
+
+	    } catch (FileNotFoundException e1) {
+	            e1.printStackTrace();
+	    }
+
+	}
+}
