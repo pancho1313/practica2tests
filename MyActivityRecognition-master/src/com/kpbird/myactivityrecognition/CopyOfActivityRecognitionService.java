@@ -72,7 +72,7 @@ public class CopyOfActivityRecognitionService extends IntentService	implements G
 			SystemClock.sleep(2000);
 			Log.d("myDebug", "testGS "+count--);
 			Intent i = new Intent(this, ActivityRecognitionService.class);
-			//startService(i);
+			startService(i);
 			PendingIntent pi = PendingIntent.getService(this, 0, i,PendingIntent.FLAG_CANCEL_CURRENT);
 			try {
 				pi.send();

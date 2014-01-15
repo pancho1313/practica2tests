@@ -1,9 +1,5 @@
 package com.example.activityregistrator;
 
-import java.util.List;
-
-
-
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -16,12 +12,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 
 
 public class LinearAccelerationService extends Service implements SensorEventListener {
-	private String TAG;
+	private String TAG = ActivityRegistrator.TAG;
 	private SensorManager mSensorManager;
     private Sensor mSensor;
     private final int sensorType = Sensor.TYPE_LINEAR_ACCELERATION;
@@ -44,7 +41,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     @Override
     public void onCreate() {
     	dataIndex = 0;
-    	dataLength = 1000000;
+    	dataLength = 10;
     	dataCache = new String[dataLength];
     	
     	mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
@@ -61,6 +58,8 @@ public class LinearAccelerationService extends Service implements SensorEventLis
         Toast.makeText(this, "service starting time: ", Toast.LENGTH_SHORT).show();
         handleCommand(intent);
 
+        saveData();
+        
         return START_STICKY;
     }
 
@@ -72,6 +71,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     @Override
     public void onDestroy() {
       Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
+      unregisterReceiver(receiver);
       mSensorManager.unregisterListener(this);
     }
     
@@ -121,14 +121,17 @@ public class LinearAccelerationService extends Service implements SensorEventLis
 		    @Override
 		    public void onReceive(Context context, Intent intent) {
 		    	
-		    	
-		    	int type = intent.getIntExtra("activityType", 0);
-		    	
+		    	Log.d(TAG, "stop and save");
+				stopMe();
 		    }
 		  };
 		  
 		 IntentFilter filter = new IntentFilter();
 		 filter.addAction("com.example.activityregistrator.END_AND_SAVE");
 		 registerReceiver(receiver, filter);
+    }
+    
+    private void stopMe(){
+    	this.stopSelf();
     }
 } 
