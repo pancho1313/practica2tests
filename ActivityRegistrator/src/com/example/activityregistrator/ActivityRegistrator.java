@@ -15,10 +15,10 @@ public class ActivityRegistrator extends Activity {
 	public static final String TAG = "ActivityRegistrator";
 	
 	public static final int IGNORE = -1; // Must be <0
-	public static final int NOT_MOVING = 0;
-	public static final int CRUISE = 1;
-	public static final int ACCELERATING = 2;
-	public static final int BREAKING = 3;
+	public static final int NOT_MOVING = 1; // Must be >0
+	public static final int CRUISE = 2; // Must be >0
+	public static final int ACCELERATING = 3; // Must be >0
+	public static final int BREAKING = 4; // Must be >0
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
