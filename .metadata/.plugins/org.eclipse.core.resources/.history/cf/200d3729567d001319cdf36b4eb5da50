@@ -1,9 +1,0 @@
-package com.example.activityregistrator;
-
-public class SaveFileIntentService extends IntentService {
-
-	public SaveFileIntentService() {
-        super("SaveFileIntentService");
-    }
-	
-}

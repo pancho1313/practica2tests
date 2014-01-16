@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Copy package &apos;com.kircherelectronics.lowpasslinearacceleration.filter&apos; to &apos;MyOrientation/src&apos;&#x0A;- Original project: &apos;LowPassLinearAcceleration&apos;&#x0A;- Destination element: &apos;MyOrientation/src&apos;&#x0A;- Original element: &apos;LowPassLinearAcceleration/src/com.kircherelectronics.lowpasslinearacceleration.filter&apos;" description="Copy package" destination="=MyOrientation/src" element1="/src&lt;com.kircherelectronics.lowpasslinearacceleration.filter" flags="589830" fragments="1" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyPackages" stamp="1389569655723" version="1.0"/>
-</session>

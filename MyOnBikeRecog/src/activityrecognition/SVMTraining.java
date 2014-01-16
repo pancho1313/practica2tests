@@ -4,8 +4,21 @@ package activityrecognition;
 import java.io.*;
 import java.util.*;
 
+import windowdata.IWindowData;
+import windowdata.WindowHalfOverlap;
+import features.IFeatures;
+import features.MyFeatures;
+
 public class SVMTraining {
+	
+	public static double vecLength(float[] v){
+    	return Math.sqrt(Math.pow(v[0], 2)+Math.pow(v[1], 2)+Math.pow(v[2], 2));
+    }
+	
 	public static void main(String[] args) {
+	    IWindowData windowData = new WindowHalfOverlap();
+	    IFeatures myFeatures = new MyFeatures();
+		
 		String sensorDataPath = args[1];
 		String sensorMarksPath = args[2];
 	    Scanner scanSD = null, scanSM = null;
@@ -24,7 +37,7 @@ public class SVMTraining {
 	    }
 	    
 	    
-	    Long prevTimeSM, postTimeSM, timeSD = -1;
+	    Long prevTimeSM, postTimeSM, timeSD = -1l;
     	int prevLabel, postLabel;
 	    if(scanSM.hasNextLine()){
 	    	scanSM.nextLine();
@@ -46,13 +59,19 @@ public class SVMTraining {
 		    		if(timeSD >= prevTimeSM){
 		    			if(timeSD <= postTimeSM){
 		    				// add x y z to windowData
-		    				float x = scanSD.nextFloat();
-		    				float y = scanSD.nextFloat();
-		    				float z = scanSD.nextFloat();
+		    				float[] linearAccel = {scanSD.nextFloat(), scanSD.nextFloat(), scanSD.nextFloat()};
+		    				
+		    				if(windowData.addData((float)vecLength(linearAccel))){
+		    		    		// we have a complete windowData
+		    		    		
+		    		    		// calculate features
+		    		    		float [] features = myFeatures.getFeatures(windowData);
+		    		    	}
 		    				
 		    				// TODO
 		    				if(scanSD.hasNextLine()){
-		    					timeSD = -1; // get nextLong()
+		    					scanSD.nextLine();
+		    					timeSD = -1l; // get nextLong()
 		    				}else{
 		    					break;
 		    				}

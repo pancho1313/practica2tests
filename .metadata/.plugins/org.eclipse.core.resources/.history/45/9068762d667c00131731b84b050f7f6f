@@ -1,5 +1,0 @@
-package activitydecision;
-
-public interface IActivityRecognizer {
-
-}
