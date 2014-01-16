@@ -49,7 +49,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     	
     	mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(sensorType);
-        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_GAME);
         
         initTime = System.currentTimeMillis();
         

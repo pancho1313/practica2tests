@@ -44,6 +44,11 @@
             android:label="@string/title_activity_activity_marker"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.example.activityregistrator.TrainingFileGenerator"
+            android:label="@string/title_activity_training_file_generator"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

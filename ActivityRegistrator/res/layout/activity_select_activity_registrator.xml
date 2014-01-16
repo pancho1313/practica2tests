@@ -35,4 +35,15 @@
         android:onClick="startRecorder"
         android:text="@string/recorder" />
 
+    <Button
+        android:id="@+id/generator"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/recorder"
+        android:layout_below="@+id/recorder"
+        android:layout_marginTop="72dp"
+        android:text="@string/generator"
+        android:onClick="startGenerator" />
+
 </RelativeLayout>

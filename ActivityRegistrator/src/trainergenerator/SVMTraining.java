@@ -1,8 +1,13 @@
-package activityrecognition;
+package trainergenerator;
 
 
 import java.io.*;
 import java.util.*;
+
+import myutil.MyUtil;
+
+import android.util.Log;
+import android.widget.TextView;
 
 import windowdata.IWindowData;
 import windowdata.WindowHalfOverlap;
@@ -11,11 +16,13 @@ import features.MyFeatures;
 
 public class SVMTraining {
 	
-	public static double vecLength(float[] v){
+	private static String TAG = "SVMTraining"; 
+	
+	private static double vecLength(float[] v){
     	return Math.sqrt(Math.pow(v[0], 2)+Math.pow(v[1], 2)+Math.pow(v[2], 2));
     }
 	
-	public static void save(String[] textToFile, String fileName, boolean append){
+	private void save(String[] textToFile, String fileName, boolean append){
 		File file = new File(fileName);
 
 	    try {
@@ -34,35 +41,75 @@ public class SVMTraining {
 	    }
 	}
 	
-	public static void main(String[] args) {
+	private int getNumberOfLines(File file){
+		int totalLines = 1;
+		try {
+			LineNumberReader lnr;
+			lnr = new LineNumberReader(new FileReader(file));
+			lnr.skip(Long.MAX_VALUE);
+			totalLines = lnr.getLineNumber();
+		    lnr.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return totalLines;
+	}
+	
+	public static boolean generateTrainingFile(
+			String sensorDataFolder,
+			String sensorDataFile,
+			String sensorMarksFolder,
+			String sensorMarksFile,
+			String outFolder,
+			String outFile,
+			TextView progress) {
 	    IWindowData windowData = new WindowHalfOverlap(64);
 	    IFeatures myFeatures = new MyFeatures();
 	    
-		String sensorDataPath = args[0];
-		String sensorMarksPath = args[1];
-		String fileName = args[2];
 	    Scanner scanSD = null, scanSM = null;
-	    File sensorData = new File(sensorDataPath);
-	    File sensorMarks = new File(sensorMarksPath);
+	    File sensorData = MyUtil.getSDFile(sensorDataFolder, sensorDataFile);
+	    File sensorMarks = MyUtil.getSDFile(sensorMarksFolder, sensorMarksFile);
+	    
+	    
+	    
 	    try {
 	    	scanSD = new Scanner(sensorData);
+	    	scanSD.useLocale(Locale.US);
 	    } catch (FileNotFoundException e1) {
-	            e1.printStackTrace();
+	    	return false;
 	    }
 	    
 	    try {
 	    	scanSM = new Scanner(sensorMarks);
+	    	scanSM.useLocale(Locale.US);
 	    } catch (FileNotFoundException e1) {
-	            e1.printStackTrace();
+	    	scanSD.close();
+	    	return false;
 	    }
+	    
+	    
+	    // progress bar TODO
+	    
 	    
 	    
 	    Long prevTimeSM, postTimeSM, timeSD = -1l;
     	int prevLabel, postLabel;
+    	
+    	/*
+    	scanSD.nextLine();
+    	for(int i = 0; i < 5; i++)
+    		Log.d(TAG,"scanSD.next(): "+scanSD.next());
+    	*/
 	    if(scanSM.hasNextLine()){
 	    	scanSM.nextLine();
 	    	prevTimeSM = scanSM.nextLong();
 	    	prevLabel = scanSM.nextInt();
+	    	
+	    	Log.d(TAG,"prevTimeSM: "+prevTimeSM+"; prevLabel: "+prevLabel);
 	    	
 	    	scanSD.nextLine();
 	    
@@ -72,6 +119,8 @@ public class SVMTraining {
 		    	postTimeSM = scanSM.nextLong();
 		    	postLabel = scanSM.nextInt();
 		    	
+		    	Log.d(TAG,"postTimeSM: "+postTimeSM+"; postLabel: "+postLabel);
+		    	
 		    	// each window has unique label
 		    	windowData.clean();
 		    	
@@ -79,6 +128,7 @@ public class SVMTraining {
 		    	// assumption: register only label>0  -->  IGNORE<=0
 		    	while(prevLabel > 0){
 		    		timeSD = timeSD<0 ? scanSD.nextLong() : timeSD;
+		    		Log.d(TAG,"timeSD: "+timeSD);
 		    		if(timeSD >= prevTimeSM){
 		    			if(timeSD <= postTimeSM){
 		    				// add x y z to windowData
@@ -96,7 +146,7 @@ public class SVMTraining {
 		    		    		for(int i = 0; i < features.length; i++){
 		    		    			textToFile[0] += (i+1)+":"+features[i]+" "; 
 		    		    		}
-		    		    		save(textToFile, fileName, true);
+		    		    		MyUtil.writeToSDFile(textToFile, outFolder, outFile, true);
 		    		    	}
 		    				
 		    				if(scanSD.hasNextLine()){
@@ -108,6 +158,13 @@ public class SVMTraining {
 		    			}else{
 		    				break;
 		    			}
+		    		}else{
+		    			if(scanSD.hasNextLine()){
+	    					scanSD.nextLine();
+	    					timeSD = -1l; // get nextLong()
+	    				}else{
+	    					break;
+	    				}
 		    		}
 		    	}
 		    	
@@ -116,6 +173,9 @@ public class SVMTraining {
 		    }
 	    }
 	    
+	    scanSD.close();
+	    scanSM.close();
 	    
+	    return true;
 	}
 }

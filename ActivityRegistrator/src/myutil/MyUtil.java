@@ -48,4 +48,13 @@ public class MyUtil {
 	    }
 	}
 	
+	public static File getSDFile(String folder /* "myFolder" */, String fileName){
+
+	    File root = android.os.Environment.getExternalStorageDirectory(); 
+	    File dir = new File (root.getAbsolutePath() + "/" + folder);
+	    File file = new File(dir, fileName);
+
+	    return file;
+	}
+	
 }

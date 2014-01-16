@@ -113,7 +113,7 @@ public class ActivityMarker extends Activity {
 	
 	private void save(int userActivity){
 		String[] s = {getServiceTime()+" "+userActivity};
-		MyUtil.writeToSDFile(s, "ActivityRegistrator/mark", "sensorMarks.txt", true);
+		MyUtil.writeToSDFile(s, "ActivityRegistrator/mark", "sensorMarks_.txt", true);
 		((TextView) findViewById(R.id.endDate)).setText(new Date().toString());
 	}
 }

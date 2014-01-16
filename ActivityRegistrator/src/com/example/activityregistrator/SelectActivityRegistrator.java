@@ -28,13 +28,15 @@ public class SelectActivityRegistrator extends Activity {
 	public void startRecorder(View view) {
 	    Intent intent = new Intent(this, ActivityRegistrator.class);
 	    startActivity(intent);
-	    finish();
 	}
 	
 	public void startRegistrator(View view) {
 	    Intent intent = new Intent(this, ActivityMarker.class);
 	    startActivity(intent);
-	    finish();
 	}
 	
+	public void startGenerator(View view) {
+	    Intent intent = new Intent(this, TrainingFileGenerator.class);
+	    startActivity(intent);
+	}
 }

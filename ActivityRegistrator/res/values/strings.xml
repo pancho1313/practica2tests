@@ -10,13 +10,24 @@
     <string name="hello_world">Hello world!</string>
     <string name="select">Select Activity</string>
     <string name="recorder">Sensor Recorder</string>
+    <string name="generator">Training Generator</string>
     <string name="registrator">Activity Registrator</string>
     <string name="title_activity_activity_marker">ActivityMarker</string>
-    
     <string name="ignore">ignore</string>
     <string name="notMoving">not moving</string>
     <string name="accelerating">accelerating</string>
     <string name="breaking">breaking</string>
     <string name="constantSpeed">constant speed</string>
-
+    <string name="title_activity_training_file_generator">TrainingFileGenerator</string>
+    
+    <string name="folderSD">ActivityRegistrator/record/</string>
+    <string name="folderSM">ActivityRegistrator/mark/</string>
+    <string name="folderTD">ActivityRegistrator/train/</string>
+    <string name="generateTD">generate</string>
+    
+    <string name="hintFileSD">sensorData_</string>
+    <string name="hintFileSM">sensorMarks_</string>
+    <string name="hintFileTD">trainingData_</string>
+    <string name="hintDotTxt">.txt</string>
+    
 </resources>
