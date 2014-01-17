@@ -23,7 +23,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
 	private String TAG = ActivityRegistrator.TAG;
 	private SensorManager mSensorManager;
     private Sensor mSensor;
-    private final int sensorType = Sensor.TYPE_LINEAR_ACCELERATION;//TODO Sensor.TYPE_LINEAR_ACCELERATION Sensor.TYPE_ACCELEROMETER
+    private final int sensorType = Sensor.TYPE_LINEAR_ACCELERATION;//TODO TYPE_LINEAR_ACCELERATION TYPE_ACCELEROMETER
     private long initTime;
     private int dataLength;
     private String[] dataCache;

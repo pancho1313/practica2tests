@@ -60,6 +60,55 @@ public class SVMTraining {
 		return totalLines;
 	}
 	
+	private static boolean getNumberOfLines(File file, int total, float mean){
+		
+		try {
+			double difSum = 0;
+			long last, actual;
+			int nLines = 0;
+			
+			Scanner scan = new Scanner(file);
+	    	scan.useLocale(Locale.US);
+	    	
+	    	if(scan.hasNextLine()){
+	    		scan.nextLine();
+	    		if(scan.hasNextLong() && scan.hasNextLine()){
+	    			last = scan.nextLong();
+	    			nLines++;
+	    			scan.nextLine();
+	    		}else{
+	    			scan.close();
+	    			return false;
+	    		}
+	    	}else{
+	    		scan.close();
+	    		return false;
+	    	}
+	    	
+	    	while(scan.hasNextLong()){
+	    		actual = scan.nextLong();
+	    		nLines++;
+	    		difSum += actual - last;
+	    		last = actual;
+	    		
+	    		if(scan.hasNextLine()){
+	    			scan.nextLine();
+	    		}else{
+	    			break;
+	    		}
+	    	}
+	    	
+	    	scan.close();
+	    	
+	    	total = nLines;
+	    	mean = (float) difSum/(total-1);
+	    	
+	    	return true;
+	    } catch (FileNotFoundException e1) {
+	    	return false;
+	    }
+	}
+	
 	public static boolean generateTrainingFile(
 			String sensorDataFolder,
 			String sensorDataFile,
@@ -93,21 +142,34 @@ public class SVMTraining {
 	    }
 	    
 	    
-	    // progress bar TODO
-	    float total = getNumberOfLines(sensorData);
+	    // progress bar
+	    int total = getNumberOfLines(sensorData);
+	    
+	    /*
+	    int total = 0;
+	    float mean = 0;
+	    boolean correct = getNumberOfLines(sensorData, total, mean); 
+	    if(!correct){
+	    	scanSM.close();
+	    	scanSD.close();
+	    	return false;
+	    }
+	    
+	    Intent intent = new Intent("com.example.activityregistrator.UPDATE_HZ");
+		intent.putExtra("hz", 1/mean);
+		context.sendBroadcast(intent);
+		*/
 	    float done = 0;
 	    
 	    
-	    Long prevTimeSM, postTimeSM, timeSD = -1l;
+	    Long prevTimeSM, postTimeSM, timeSD = -1l, lastTimeSD = 0l, firstTimeSD = -1l;
     	int prevLabel, postLabel;
     	
 	    if(scanSM.hasNextLine()){
 	    	scanSM.nextLine();
 	    	prevTimeSM = scanSM.nextLong();
 	    	prevLabel = scanSM.nextInt();
-	    	
-	    	Log.d(TAG,"prevTimeSM: "+prevTimeSM+"; prevLabel: "+prevLabel);
-	    	
+
 	    	scanSD.nextLine();
 	    	Intent intent = new Intent("com.example.activityregistrator.UPDATE_PROGRESS");
 	    	intent.putExtra("progress", (float)((++done)/total)*100);
@@ -118,6 +180,9 @@ public class SVMTraining {
 		    	scanSM.nextLine();
 		    	if(!scanSM.hasNextLong())
 		    		break;
+		    	
+		    	Log.d(TAG,"prevTimeSM: "+prevTimeSM+"; prevLabel: "+prevLabel);
+		    	
 		    	postTimeSM = scanSM.nextLong();
 		    	postLabel = scanSM.nextInt();
 		    	
@@ -128,11 +193,25 @@ public class SVMTraining {
 		    	
 		    	// search windowData beginning
 		    	// assumption: register only label>0  -->  IGNORE<=0
-		    	while(prevLabel > 0 && scanSD.hasNextLong()){
-		    		timeSD = timeSD<0 ? scanSD.nextLong() : timeSD;
-		    		Log.d(TAG,"timeSD: "+timeSD);
+		    	while(prevLabel > 0){
+		    		
+		    		if(timeSD<0){
+		    			if(!scanSD.hasNextLong()){
+		    				break;
+		    			}
+		    			timeSD = scanSD.nextLong();
+		    		}
+		    		
+		    		
+		    		// used to calculate hz
+		    		lastTimeSD = timeSD;
+		    		if(firstTimeSD < 0)
+		    			firstTimeSD = timeSD;
+		    		
 		    		if(timeSD >= prevTimeSM){
 		    			if(timeSD <= postTimeSM){
+		    				Log.d(TAG,"timeSD: "+timeSD);
+		    				
 		    				// add x y z to windowData
 		    				float[] linearAccel = {scanSD.nextFloat(), scanSD.nextFloat(), scanSD.nextFloat()};
 		    				
@@ -183,6 +262,12 @@ public class SVMTraining {
 	    
 	    scanSD.close();
 	    scanSM.close();
+	    
+	    Intent intent = new Intent("com.example.activityregistrator.UPDATE_HZ");
+		intent.putExtra("hz", done/(((float)(lastTimeSD - firstTimeSD))/1000f));
+		context.sendBroadcast(intent);
+		
+		Log.d(TAG,"[firstTimeSD,lastTimeSD,done]: "+firstTimeSD+" "+lastTimeSD+" "+done);
 	    
 	    return true;
 	}

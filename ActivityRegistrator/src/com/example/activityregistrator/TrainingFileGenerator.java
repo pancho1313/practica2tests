@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 public class TrainingFileGenerator extends Activity {
 
-	BroadcastReceiver reciever;
+	BroadcastReceiver progressReciever, hzReciever, userMessage;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class TrainingFileGenerator extends Activity {
 		// keep screen on
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
-		initReciever();
+		initRecievers();
 	}
 
 	@Override
@@ -38,7 +38,9 @@ public class TrainingFileGenerator extends Activity {
 	@Override
     public void onDestroy() {
 		super.onDestroy();
-		unregisterReceiver(reciever);
+		unregisterReceiver(progressReciever);
+		unregisterReceiver(hzReciever);
+		unregisterReceiver(userMessage);
     }
 	
 	public void generateTD(View v){
@@ -54,8 +56,8 @@ public class TrainingFileGenerator extends Activity {
     	startService(intent);
 	}
 
-	private void initReciever(){
-    	reciever = new BroadcastReceiver() {
+	private void initRecievers(){
+    	progressReciever = new BroadcastReceiver() {
 		    @Override
 		    public void onReceive(Context context, Intent intent) {
 		    	((TextView)findViewById(R.id.progress)).setText(intent.getFloatExtra("progress", -2)+"%");
@@ -64,6 +66,30 @@ public class TrainingFileGenerator extends Activity {
 		  
 		 IntentFilter filter = new IntentFilter();
 		 filter.addAction("com.example.activityregistrator.UPDATE_PROGRESS");
-		 registerReceiver(reciever, filter);
+		 registerReceiver(progressReciever, filter);
+		 
+		 
+		 hzReciever = new BroadcastReceiver() {
+		    @Override
+		    public void onReceive(Context context, Intent intent) {
+		    	((TextView)findViewById(R.id.hz)).setText(intent.getFloatExtra("hz", -3)+"hz");
+		    }
+		  };
+		  
+		 IntentFilter filter2 = new IntentFilter();
+		 filter2.addAction("com.example.activityregistrator.UPDATE_HZ");
+		 registerReceiver(hzReciever, filter2);
+		 
+		 
+		 userMessage = new BroadcastReceiver() {
+		    @Override
+		    public void onReceive(Context context, Intent intent) {
+		    	((TextView)findViewById(R.id.userMessage)).setText(intent.getStringExtra("userMessage"));
+		    }
+		  };
+		  
+		 IntentFilter filter3 = new IntentFilter();
+		 filter3.addAction("com.example.activityregistrator.USER_MESSAGE");
+		 registerReceiver(userMessage, filter3);
     }
 }
