@@ -3,7 +3,6 @@ package com.example.activityregistrator;
 import java.util.Date;
 
 import myutil.MyUtil;
-import android.R.color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Color;

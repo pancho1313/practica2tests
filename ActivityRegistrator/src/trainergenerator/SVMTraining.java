@@ -6,8 +6,9 @@ import java.util.*;
 
 import myutil.MyUtil;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
-import android.widget.TextView;
 
 import windowdata.IWindowData;
 import windowdata.WindowHalfOverlap;
@@ -41,7 +42,7 @@ public class SVMTraining {
 	    }
 	}
 	
-	private int getNumberOfLines(File file){
+	private static int getNumberOfLines(File file){
 		int totalLines = 1;
 		try {
 			LineNumberReader lnr;
@@ -66,7 +67,7 @@ public class SVMTraining {
 			String sensorMarksFile,
 			String outFolder,
 			String outFile,
-			TextView progress) {
+			Context context){
 	    IWindowData windowData = new WindowHalfOverlap(64);
 	    IFeatures myFeatures = new MyFeatures();
 	    
@@ -93,17 +94,13 @@ public class SVMTraining {
 	    
 	    
 	    // progress bar TODO
-	    
+	    float total = getNumberOfLines(sensorData);
+	    float done = 0;
 	    
 	    
 	    Long prevTimeSM, postTimeSM, timeSD = -1l;
     	int prevLabel, postLabel;
     	
-    	/*
-    	scanSD.nextLine();
-    	for(int i = 0; i < 5; i++)
-    		Log.d(TAG,"scanSD.next(): "+scanSD.next());
-    	*/
 	    if(scanSM.hasNextLine()){
 	    	scanSM.nextLine();
 	    	prevTimeSM = scanSM.nextLong();
@@ -112,10 +109,15 @@ public class SVMTraining {
 	    	Log.d(TAG,"prevTimeSM: "+prevTimeSM+"; prevLabel: "+prevLabel);
 	    	
 	    	scanSD.nextLine();
+	    	Intent intent = new Intent("com.example.activityregistrator.UPDATE_PROGRESS");
+	    	intent.putExtra("progress", (float)((++done)/total)*100);
+			context.sendBroadcast(intent);
 	    
 	    	// find next time and label
 		    while(scanSM.hasNextLine()){
 		    	scanSM.nextLine();
+		    	if(!scanSM.hasNextLong())
+		    		break;
 		    	postTimeSM = scanSM.nextLong();
 		    	postLabel = scanSM.nextInt();
 		    	
@@ -124,9 +126,9 @@ public class SVMTraining {
 		    	// each window has unique label
 		    	windowData.clean();
 		    	
-		    	// search windowData begining
+		    	// search windowData beginning
 		    	// assumption: register only label>0  -->  IGNORE<=0
-		    	while(prevLabel > 0){
+		    	while(prevLabel > 0 && scanSD.hasNextLong()){
 		    		timeSD = timeSD<0 ? scanSD.nextLong() : timeSD;
 		    		Log.d(TAG,"timeSD: "+timeSD);
 		    		if(timeSD >= prevTimeSM){
@@ -151,6 +153,9 @@ public class SVMTraining {
 		    				
 		    				if(scanSD.hasNextLine()){
 		    					scanSD.nextLine();
+		    					intent = new Intent("com.example.activityregistrator.UPDATE_PROGRESS");
+		    					intent.putExtra("progress", (float)((++done)/total)*100);
+		    					context.sendBroadcast(intent);
 		    					timeSD = -1l; // get nextLong()
 		    				}else{
 		    					break;
@@ -161,6 +166,9 @@ public class SVMTraining {
 		    		}else{
 		    			if(scanSD.hasNextLine()){
 	    					scanSD.nextLine();
+	    					intent = new Intent("com.example.activityregistrator.UPDATE_PROGRESS");
+	    					intent.putExtra("progress", (float)((++done)/total)*100);
+	    					context.sendBroadcast(intent);
 	    					timeSD = -1l; // get nextLong()
 	    				}else{
 	    					break;

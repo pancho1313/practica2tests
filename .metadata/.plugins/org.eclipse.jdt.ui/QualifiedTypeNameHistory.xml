@@ -32,7 +32,6 @@
 <fullyQualifiedTypeName name="activityrecognition.SvmRecognizer"/>
 <fullyQualifiedTypeName name="android.hardware.SensorManager"/>
 <fullyQualifiedTypeName name="android.content.BroadcastReceiver"/>
-<fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="android.hardware.Sensor"/>
 <fullyQualifiedTypeName name="android.app.Service"/>
@@ -50,4 +49,5 @@
 <fullyQualifiedTypeName name="java.io.FileReader"/>
 <fullyQualifiedTypeName name="java.util.StringTokenizer"/>
 <fullyQualifiedTypeName name="android.text.format.Formatter"/>
+<fullyQualifiedTypeName name="android.content.Context"/>
 </qualifiedTypeNameHistroy>

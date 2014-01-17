@@ -28,6 +28,8 @@
         </service>
         <service android:name="com.example.activityregistrator.SaveFileIntentService" >
         </service>
+        <service android:name="com.example.activityregistrator.TrainingGeneratorIntentService" >
+        </service>
 
         <activity
             android:name="com.example.activityregistrator.SelectActivityRegistrator"

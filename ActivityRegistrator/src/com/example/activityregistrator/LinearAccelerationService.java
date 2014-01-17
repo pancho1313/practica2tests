@@ -23,12 +23,12 @@ public class LinearAccelerationService extends Service implements SensorEventLis
 	private String TAG = ActivityRegistrator.TAG;
 	private SensorManager mSensorManager;
     private Sensor mSensor;
-    private final int sensorType = Sensor.TYPE_ACCELEROMETER;//TODO Sensor.TYPE_LINEAR_ACCELERATION
+    private final int sensorType = Sensor.TYPE_LINEAR_ACCELERATION;//TODO Sensor.TYPE_LINEAR_ACCELERATION Sensor.TYPE_ACCELEROMETER
     private long initTime;
     private int dataLength;
     private String[] dataCache;
     private int dataIndex;
-    private BroadcastReceiver receiver;
+    private BroadcastReceiver reciever;
     
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
@@ -71,9 +71,10 @@ public class LinearAccelerationService extends Service implements SensorEventLis
 
     @Override
     public void onDestroy() {
-      Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
-      unregisterReceiver(receiver);
-      mSensorManager.unregisterListener(this);
+    	super.onDestroy();
+		Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
+		unregisterReceiver(reciever);
+		mSensorManager.unregisterListener(this);
     }
     
     private long getServiceTime(){
@@ -125,7 +126,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
 	}
     
     private void initStopReciever(){
-    	receiver = new BroadcastReceiver() {
+    	reciever = new BroadcastReceiver() {
 		    @Override
 		    public void onReceive(Context context, Intent intent) {
 		    	
@@ -137,7 +138,7 @@ public class LinearAccelerationService extends Service implements SensorEventLis
 		  
 		 IntentFilter filter = new IntentFilter();
 		 filter.addAction("com.example.activityregistrator.END_AND_SAVE");
-		 registerReceiver(receiver, filter);
+		 registerReceiver(reciever, filter);
     }
     
     private void stopMe(){
