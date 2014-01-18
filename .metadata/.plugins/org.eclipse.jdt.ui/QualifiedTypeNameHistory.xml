@@ -10,7 +10,6 @@
 <fullyQualifiedTypeName name="android.app.Notification"/>
 <fullyQualifiedTypeName name="android.os.SystemClock"/>
 <fullyQualifiedTypeName name="android.view.WindowManager"/>
-<fullyQualifiedTypeName name="android.widget.LinearLayout"/>
 <fullyQualifiedTypeName name="java.sql.Date"/>
 <fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="com.kpbird.myactivityrecognition.R.id"/>
@@ -51,4 +50,5 @@
 <fullyQualifiedTypeName name="android.text.format.Formatter"/>
 <fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="android.widget.LinearLayout"/>
 </qualifiedTypeNameHistroy>

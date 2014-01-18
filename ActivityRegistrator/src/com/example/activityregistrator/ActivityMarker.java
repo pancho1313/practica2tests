@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ActivityMarker extends Activity {
@@ -98,8 +99,8 @@ public class ActivityMarker extends Activity {
 		markerState = STARTED;
 		initTime = System.currentTimeMillis();
 		
-		((Button)findViewById(R.id.button1)).setEnabled(false);
-		
+		((Button)findViewById(R.id.button1)).setVisibility(View.GONE);
+		((LinearLayout) findViewById(R.id.dateLayout)).setVisibility(View.VISIBLE);
 		((TextView) findViewById(R.id.startDate)).setText(new Date().toString());
 		
 		String[] s = {"T " + new Date().toString()};

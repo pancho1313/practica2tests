@@ -44,7 +44,8 @@
         <activity
             android:name="com.example.activityregistrator.ActivityMarker"
             android:label="@string/title_activity_activity_marker"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
             android:name="com.example.activityregistrator.TrainingFileGenerator"
