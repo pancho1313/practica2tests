@@ -214,6 +214,7 @@ public class SVMTraining {
 		    				
 		    				// add x y z to windowData
 		    				float[] linearAccel = {scanSD.nextFloat(), scanSD.nextFloat(), scanSD.nextFloat()};
+		    				float[] gData = {scanSD.nextFloat(), scanSD.nextFloat(), scanSD.nextFloat()};
 		    				
 		    				if(windowData.addData((float)vecLength(linearAccel))){
 		    		    		// we have a complete windowData

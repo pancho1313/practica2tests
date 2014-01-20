@@ -117,7 +117,7 @@ public class SVMTraining {
 			String outFolder,
 			String outFile,
 			Context context){
-	    IWindowData windowData = new WindowHalfOverlap(64);
+	    IWindowData windowData = new WindowHalfOverlap(128);
 	    IFeatures myFeatures = new MyFeatures();
 	    
 	    Scanner scanSD = null, scanSM = null;
