@@ -26,7 +26,6 @@
 <fullyQualifiedTypeName name="windowdata.WindowHalfOverlap"/>
 <fullyQualifiedTypeName name="windowdata.IWindowData"/>
 <fullyQualifiedTypeName name="features.IFeatures"/>
-<fullyQualifiedTypeName name="features.MyFeatures"/>
 <fullyQualifiedTypeName name="activitydecision.IActivityRecognizer"/>
 <fullyQualifiedTypeName name="activityrecognition.SvmRecognizer"/>
 <fullyQualifiedTypeName name="android.hardware.SensorManager"/>
@@ -36,7 +35,6 @@
 <fullyQualifiedTypeName name="android.app.Service"/>
 <fullyQualifiedTypeName name="android.hardware.SensorEventListener"/>
 <fullyQualifiedTypeName name="android.os.IBinder"/>
-<fullyQualifiedTypeName name="android.widget.Toast"/>
 <fullyQualifiedTypeName name="android.app.IntentService"/>
 <fullyQualifiedTypeName name="android.content.Intent"/>
 <fullyQualifiedTypeName name="android.view.View"/>
@@ -48,7 +46,17 @@
 <fullyQualifiedTypeName name="java.io.FileReader"/>
 <fullyQualifiedTypeName name="java.util.StringTokenizer"/>
 <fullyQualifiedTypeName name="android.text.format.Formatter"/>
-<fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="android.widget.LinearLayout"/>
+<fullyQualifiedTypeName name="myutil.AssetsPropertyReader"/>
+<fullyQualifiedTypeName name="android.content.Context"/>
+<fullyQualifiedTypeName name="java.util.Properties"/>
+<fullyQualifiedTypeName name="android.widget.Toast"/>
+<fullyQualifiedTypeName name="com.example.activityregistrator.R.id"/>
+<fullyQualifiedTypeName name="java.util.Enumeration"/>
+<fullyQualifiedTypeName name="features.MyFeatures2"/>
+<fullyQualifiedTypeName name="features.MyFeatures"/>
+<fullyQualifiedTypeName name="com.example.activityregistrator.ActivityRegistrator"/>
+<fullyQualifiedTypeName name="features.MyFeatures3"/>
+<fullyQualifiedTypeName name="features.MyFeatures4"/>
 </qualifiedTypeNameHistroy>
