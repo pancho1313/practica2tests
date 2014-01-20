@@ -42,8 +42,18 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/recorder"
         android:layout_below="@+id/recorder"
-        android:layout_marginTop="72dp"
-        android:text="@string/generator"
-        android:onClick="startGenerator" />
+        android:layout_marginTop="39dp"
+        android:onClick="startGenerator"
+        android:text="@string/generator" />
+
+    <TextView
+        android:id="@+id/properties"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/registrator"
+        android:layout_below="@+id/generator"
+        android:layout_marginTop="32dp"
+        android:text="@string/propertiesNull"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

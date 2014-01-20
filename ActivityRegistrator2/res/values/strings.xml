@@ -30,4 +30,6 @@
     <string name="hintFileTD">trainingData_</string>
     <string name="hintDotTxt">.txt</string>
     
+    <string name="propertiesNull">properties:NULL</string>
+    
 </resources>

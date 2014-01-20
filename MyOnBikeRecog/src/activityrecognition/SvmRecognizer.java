@@ -19,7 +19,7 @@ public class SvmRecognizer implements IActivityRecognizer {
     private native int doClassificationNative(float values[][], int indices[][],
     		int isProb, String modelFile, int labels[], double probs[]);
     
- // Load the native library
+    // Load the native library
     static {
         try {
             System.loadLibrary("signal");

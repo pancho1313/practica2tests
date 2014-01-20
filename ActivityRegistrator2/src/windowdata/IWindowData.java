@@ -7,7 +7,7 @@ public interface IWindowData
 	 * @param data
 	 * @return if full window
 	 */
-	public boolean addData(float data);
+	public boolean addData(float[] data);
 
 	/**
 	 * Set window size
@@ -19,7 +19,7 @@ public interface IWindowData
 	/**
 	 * Get all data in present window
 	 */
-	public float[] getData();
+	public float[] getData(int dataIndex);
 	
 	/**
 	 * reset and delete window data

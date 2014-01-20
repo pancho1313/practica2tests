@@ -13,7 +13,10 @@ import android.util.Log;
 import windowdata.IWindowData;
 import windowdata.WindowHalfOverlap;
 import features.IFeatures;
-import features.MyFeatures;
+import features.MyFeatures1;
+import features.MyFeatures2;
+import features.MyFeatures3;
+import features.MyFeatures4;
 
 public class SVMTraining {
 	
@@ -116,9 +119,13 @@ public class SVMTraining {
 			String sensorMarksFile,
 			String outFolder,
 			String outFile,
-			Context context){
-	    IWindowData windowData = new WindowHalfOverlap(64);
-	    IFeatures myFeatures = new MyFeatures();
+			Context context,
+			int wSize,
+			int floatsPerWindowData,
+			int featuresType){
+		
+	    IWindowData windowData = new WindowHalfOverlap(wSize, floatsPerWindowData);
+	    IFeatures myFeatures = new MyFeatures1();
 	    
 	    Scanner scanSD = null, scanSM = null;
 	    File sensorData = MyUtil.getSDFile(sensorDataFolder, sensorDataFile);
@@ -163,12 +170,13 @@ public class SVMTraining {
 	    
 	    
 	    Long prevTimeSM, postTimeSM, timeSD = -1l, lastTimeSD = 0l, firstTimeSD = -1l;
-    	int prevLabel, postLabel;
+    	int prevLabel, actualLabel, postLabel;
     	
 	    if(scanSM.hasNextLine()){
 	    	scanSM.nextLine();
 	    	prevTimeSM = scanSM.nextLong();
-	    	prevLabel = scanSM.nextInt();
+	    	actualLabel = scanSM.nextInt();
+	    	prevLabel = actualLabel;
 
 	    	scanSD.nextLine();
 	    	Intent intent = new Intent("com.example.activityregistrator.UPDATE_PROGRESS");
@@ -181,7 +189,7 @@ public class SVMTraining {
 		    	if(!scanSM.hasNextLong())
 		    		break;
 		    	
-		    	Log.d(TAG,"prevTimeSM: "+prevTimeSM+"; prevLabel: "+prevLabel);
+		    	Log.d(TAG,"prevTimeSM: "+prevTimeSM+"; actualLabel: "+actualLabel);
 		    	
 		    	postTimeSM = scanSM.nextLong();
 		    	postLabel = scanSM.nextInt();
@@ -193,7 +201,7 @@ public class SVMTraining {
 		    	
 		    	// search windowData beginning
 		    	// assumption: register only label>0  -->  IGNORE<=0
-		    	while(prevLabel > 0){
+		    	while(actualLabel > 0){
 		    		
 		    		if(timeSD<0){
 		    			if(!scanSD.hasNextLong()){
@@ -212,19 +220,101 @@ public class SVMTraining {
 		    			if(timeSD <= postTimeSM){
 		    				Log.d(TAG,"timeSD: "+timeSD);
 		    				
+		    				float[] data = new float[1];
+		    				
 		    				// add x y z to windowData
 		    				float[] linearAccel = {scanSD.nextFloat(), scanSD.nextFloat(), scanSD.nextFloat()};
-		    				float[] gData = {scanSD.nextFloat(), scanSD.nextFloat(), scanSD.nextFloat()};
 		    				
-		    				if(windowData.addData((float)vecLength(linearAccel))){
-		    		    		// we have a complete windowData
-		    		    		
+		    				
+		    				if(featuresType == MyFeatures2.FEATURES_TYPE){
+		    					
+			    				float[] gData = {scanSD.nextFloat(), scanSD.nextFloat(), scanSD.nextFloat()};
+			    				
+			    				// get the length horizontal and vertical (global) components of linear acceleration
+			    				float[] lAccHorizontal = new float[3];
+			    				float[] lAccVertical = new float[3];
+			    				
+			    					// scale factor for gData
+			    				double dividend = (Math.pow(gData[0], 2) + Math.pow(gData[1], 2) + Math.pow(gData[2], 2));
+			    				if(dividend == 0){
+			    					dividend = 0.0000001;
+			    				}
+			    				float c = (float) (-1 * (
+			    						(gData[0]*linearAccel[0] + gData[1]*linearAccel[1] + gData[2]*linearAccel[2])
+			    						/
+			    						dividend
+			    						));
+			    				
+			    				lAccVertical[0] = gData[0] * c;
+			    				lAccVertical[1] = gData[1] * c;
+			    				lAccVertical[2] = gData[2] * c;
+			    				
+			    				lAccHorizontal[0] = lAccVertical[0] + linearAccel[0];
+			    				lAccHorizontal[1] = lAccVertical[1] + linearAccel[1];
+			    				lAccHorizontal[2] = lAccVertical[2] + linearAccel[2];
+			    				
+			    				data = new float[]{(float)vecLength(lAccHorizontal), (float)vecLength(lAccVertical)};
+		    				}else if(featuresType == MyFeatures1.FEATURES_TYPE){
+		    					data = new float[]{(float)vecLength(linearAccel)};
+		    				}else if(featuresType == MyFeatures3.FEATURES_TYPE){
+		    					float prevState = 0;
+		    					
+		    					if(prevLabel <= 0)
+		    						prevLabel = actualLabel;
+		    					
+		    					prevState = prevLabel;
+		    					
+		    					data = new float[]{(float)vecLength(linearAccel), prevState};
+		    				}else if(featuresType == MyFeatures4.FEATURES_TYPE){
+		    					// prev state
+		    					float prevState = 0;
+		    					
+		    					if(prevLabel <= 0)
+		    						prevState = actualLabel;
+		    					else
+		    						prevState = prevLabel;
+		    					
+		    					// horizontal, vertical linear acceleration
+		    					float[] gData = {scanSD.nextFloat(), scanSD.nextFloat(), scanSD.nextFloat()};
+			    				
+			    				// get the length horizontal and vertical (global) components of linear acceleration
+			    				float[] lAccHorizontal = new float[3];
+			    				float[] lAccVertical = new float[3];
+			    				
+			    					// scale factor for gData
+			    				double dividend = (Math.pow(gData[0], 2) + Math.pow(gData[1], 2) + Math.pow(gData[2], 2));
+			    				if(dividend == 0){
+			    					dividend = 0.0000001;
+			    				}
+			    				float c = (float) (-1 * (
+			    						(gData[0]*linearAccel[0] + gData[1]*linearAccel[1] + gData[2]*linearAccel[2])
+			    						/
+			    						dividend
+			    						));
+			    				
+			    				lAccVertical[0] = gData[0] * c;
+			    				lAccVertical[1] = gData[1] * c;
+			    				lAccVertical[2] = gData[2] * c;
+			    				
+			    				lAccHorizontal[0] = lAccVertical[0] + linearAccel[0];
+			    				lAccHorizontal[1] = lAccVertical[1] + linearAccel[1];
+			    				lAccHorizontal[2] = lAccVertical[2] + linearAccel[2];
+			    				
+		    					data = new float[]{
+		    							(float)vecLength(lAccHorizontal),
+		    							(float)vecLength(lAccVertical),
+		    							prevState};
+		    				}
+		    				
+		    				// add data to windowData
+		    				if(windowData.addData(data)){// we have a complete windowData
+		    					
 		    		    		// calculate features
 		    		    		float [] features = myFeatures.getFeatures(windowData);
 		    		    		
 		    		    		// save to libsvm file with the correct label
 		    		    		String[] textToFile = new String[1];
-		    		    		textToFile[0] = prevLabel + " ";
+		    		    		textToFile[0] = actualLabel + " ";
 		    		    		for(int i = 0; i < features.length; i++){
 		    		    			textToFile[0] += (i+1)+":"+features[i]+" "; 
 		    		    		}
@@ -256,8 +346,9 @@ public class SVMTraining {
 		    		}
 		    	}
 		    	
+		    	prevLabel = actualLabel;
 		    	prevTimeSM = postTimeSM;
-		    	prevLabel = postLabel;
+		    	actualLabel = postLabel;
 		    }
 	    }
 	    
