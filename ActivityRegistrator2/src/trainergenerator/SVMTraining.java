@@ -112,6 +112,84 @@ public class SVMTraining {
 	    }
 	}
 	
+	private static Scanner readLine(BufferedReader br){
+		
+		try {
+			 
+			String sCurrentLine = br.readLine();
+			if(sCurrentLine == null){
+				Log.d(TAG,"readLine(BufferedReader br): sCurrentLine == null");
+				return null;
+			}
+			
+			Scanner scan = new Scanner(sCurrentLine);
+	        scan.useLocale(Locale.US);
+	        return scan;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Log.d(TAG,"readLine(BufferedReader br): return null");
+		return null;
+	}
+	
+	private static void closeBR(BufferedReader br){
+		try {
+			if (br != null)br.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+	private static BufferedReader getBR(File file){
+		BufferedReader br = null;
+		 
+		try {
+ 
+			br = new BufferedReader(new FileReader(file));
+ 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return br;
+	}
+	
+	private void foo(){
+		BufferedReader br = null;
+		 
+		try {
+ 
+			String sCurrentLine;
+ 
+			br = new BufferedReader(new FileReader("C:\\testing.txt"));
+ 
+			while ((sCurrentLine = br.readLine()) != null) {
+				System.out.println(sCurrentLine);
+			}
+ 
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null)br.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		///////////////////////////
+		String s = "10140 18.674652 4.2338295 -0.03422594 0.7854203 6.3772726 7.408367";
+
+        Scanner scan =new Scanner(s);
+        scan.useLocale(Locale.US);
+        if(scan.hasNextLong())
+        	Log.d("SvmRecognizer","scan.nextLong(): "+scan.nextLong());
+        if(scan.hasNextFloat()){
+        	Log.d("SvmRecognizer","scan.nextFloat(): "+scan.nextFloat());
+        	Log.d("SvmRecognizer","scan.nextFloat(): "+scan.nextFloat());
+        	Log.d("SvmRecognizer","scan.nextFloat(): "+scan.nextFloat());
+        }
+        scan.close();
+	}
+	
 	public static boolean generateTrainingFile(
 			String sensorDataFolder,
 			String sensorDataFile,
@@ -126,66 +204,45 @@ public class SVMTraining {
 		
 	    IWindowData windowData = new WindowHalfOverlap(wSize, floatsPerWindowData);
 	    IFeatures myFeatures = new MyFeatures1();
+	    if(featuresType == MyFeatures2.FEATURES_TYPE){
+	    	myFeatures = new MyFeatures2();
+	    }else if(featuresType == MyFeatures3.FEATURES_TYPE){
+	    	myFeatures = new MyFeatures3();
+	    }else if(featuresType == MyFeatures4.FEATURES_TYPE){
+	    	myFeatures = new MyFeatures4();
+	    }
 	    
-	    Scanner scanSD = null, scanSM = null;
+	    Scanner scanSM = null, scanSD = null;
 	    File sensorData = MyUtil.getSDFile(sensorDataFolder, sensorDataFile);
 	    File sensorMarks = MyUtil.getSDFile(sensorMarksFolder, sensorMarksFile);
-	    
-	    
-	    
-	    try {
-	    	scanSD = new Scanner(sensorData);
-	    	scanSD.useLocale(Locale.US);
-	    } catch (FileNotFoundException e1) {
-	    	return false;
-	    }
-	    
-	    try {
-	    	scanSM = new Scanner(sensorMarks);
-	    	scanSM.useLocale(Locale.US);
-	    } catch (FileNotFoundException e1) {
-	    	scanSD.close();
-	    	return false;
-	    }
-	    
+	    BufferedReader brSD = getBR(sensorData);
+	    BufferedReader brSM = getBR(sensorMarks);
 	    
 	    // progress bar
 	    int total = getNumberOfLines(sensorData);
-	    
-	    /*
-	    int total = 0;
-	    float mean = 0;
-	    boolean correct = getNumberOfLines(sensorData, total, mean); 
-	    if(!correct){
-	    	scanSM.close();
-	    	scanSD.close();
-	    	return false;
-	    }
-	    
-	    Intent intent = new Intent("com.example.activityregistrator.UPDATE_HZ");
-		intent.putExtra("hz", 1/mean);
-		context.sendBroadcast(intent);
-		*/
 	    float done = 0;
 	    
 	    
 	    Long prevTimeSM, postTimeSM, timeSD = -1l, lastTimeSD = 0l, firstTimeSD = -1l;
     	int prevLabel, actualLabel, postLabel;
     	
-	    if(scanSM.hasNextLine()){
-	    	scanSM.nextLine();
+    	readLine(brSM);// skip first line: date
+    	scanSD = readLine(brSD);// skip first line: date
+    	
+	    if((scanSM=readLine(brSM)) != null){
 	    	prevTimeSM = scanSM.nextLong();
 	    	actualLabel = scanSM.nextInt();
 	    	prevLabel = actualLabel;
 
-	    	scanSD.nextLine();
+	    	scanSD.close();
+	    	scanSD = readLine(brSD);
 	    	Intent intent = new Intent("com.example.activityregistrator.UPDATE_PROGRESS");
 	    	intent.putExtra("progress", (float)((++done)/total)*100);
 			context.sendBroadcast(intent);
 	    
 	    	// find next time and label
-		    while(scanSM.hasNextLine()){
-		    	scanSM.nextLine();
+			scanSM.close();
+		    while((scanSM=readLine(brSM)) != null){
 		    	if(!scanSM.hasNextLong())
 		    		break;
 		    	
@@ -204,7 +261,9 @@ public class SVMTraining {
 		    	while(actualLabel > 0){
 		    		
 		    		if(timeSD<0){
+		    			
 		    			if(!scanSD.hasNextLong()){
+		    				Log.d(TAG,"break: !scanSD.hasNext(): ");
 		    				break;
 		    			}
 		    			timeSD = scanSD.nextLong();
@@ -321,8 +380,8 @@ public class SVMTraining {
 		    		    		MyUtil.writeToSDFile(textToFile, outFolder, outFile, true);
 		    		    	}
 		    				
-		    				if(scanSD.hasNextLine()){
-		    					scanSD.nextLine();
+		    				scanSD.close();
+		    				if((scanSD=readLine(brSD)) != null){
 		    					intent = new Intent("com.example.activityregistrator.UPDATE_PROGRESS");
 		    					intent.putExtra("progress", (float)((++done)/total)*100);
 		    					context.sendBroadcast(intent);
@@ -334,8 +393,8 @@ public class SVMTraining {
 		    				break;
 		    			}
 		    		}else{
-		    			if(scanSD.hasNextLine()){
-	    					scanSD.nextLine();
+		    			scanSD.close();
+		    			if((scanSD=readLine(brSD)) != null){
 	    					intent = new Intent("com.example.activityregistrator.UPDATE_PROGRESS");
 	    					intent.putExtra("progress", (float)((++done)/total)*100);
 	    					context.sendBroadcast(intent);
@@ -349,11 +408,17 @@ public class SVMTraining {
 		    	prevLabel = actualLabel;
 		    	prevTimeSM = postTimeSM;
 		    	actualLabel = postLabel;
+		    	
+		    	scanSM.close();
 		    }
 	    }
 	    
-	    scanSD.close();
-	    scanSM.close();
+	    if(scanSD != null)
+	    	scanSD.close();
+	    if(scanSM != null)
+	    	scanSM.close();
+	    closeBR(brSD);
+	    closeBR(brSM);
 	    
 	    Intent intent = new Intent("com.example.activityregistrator.UPDATE_HZ");
 		intent.putExtra("hz", done/(((float)(lastTimeSD - firstTimeSD))/1000f));

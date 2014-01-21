@@ -60,6 +60,7 @@ public class TrainingFileGenerator extends Activity {
     	progressReciever = new BroadcastReceiver() {
 		    @Override
 		    public void onReceive(Context context, Intent intent) {
+		    	((Button)findViewById(R.id.button1)).setEnabled(false);
 		    	((TextView)findViewById(R.id.progress)).setText(intent.getFloatExtra("progress", -2)+"%");
 		    }
 		  };

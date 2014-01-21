@@ -8,9 +8,47 @@ public class SvmRecognizer implements IActivityRecognizer {
 	
 	public int getUserRecognizedActivity(float[] features){
 		// TODO
+		//scaleFeatures(features);
 		return 1;
 	}
 	
+	
+	private void scaleFeatures(float[] features){
+		
+		Log.d(TAG, "[ 1.1407704 2.9884565 171.4136 400.23703 ] (input)");
+		features = new float[]{1.1407704f, 2.9884565f, 171.4136f, 400.23703f};
+		/////////////////////////////////
+		
+		float scaleH = 1;
+		float scaleL = -1;
+
+		float[] featuresMax = new float[features.length];
+		float[] featuresMin = new float[features.length];
+		
+		featuresMin[0] = 0.5763978f;
+		featuresMin[1] = 0.6271618f;
+		featuresMin[2] = 41.775806f;
+		featuresMin[3] = 207.24507f;
+		
+		featuresMax[0] = 5.0268035f;
+		featuresMax[1] = 15.986454f;
+		featuresMax[2] = 4166.345f;
+		featuresMax[3] = 1696.9004f;
+		
+		float zero = (scaleH + scaleL)/2;
+		float dif;
+		for(int i = 0; i < features.length; i++){
+			dif = zero - features[i];
+			features[i] = (dif * (scaleH - scaleL))/(featuresMax[i] - featuresMin[i]);
+		}
+		////////////////
+		Log.d(TAG, "[ ");
+		for(float f : features){
+			Log.d(TAG, f+" ");
+		}
+		Log.d(TAG, "] (your's)");
+		Log.d(TAG, "[ -0.807638 -0.697996 -0.945516 -0.797683 ] (libsvm)");
+	}
 	/////////////////////////////////////////////////////////
 	
 	// svm native

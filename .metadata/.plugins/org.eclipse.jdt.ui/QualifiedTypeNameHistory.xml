@@ -46,7 +46,6 @@
 <fullyQualifiedTypeName name="java.io.FileReader"/>
 <fullyQualifiedTypeName name="java.util.StringTokenizer"/>
 <fullyQualifiedTypeName name="android.text.format.Formatter"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="android.widget.LinearLayout"/>
 <fullyQualifiedTypeName name="myutil.AssetsPropertyReader"/>
 <fullyQualifiedTypeName name="android.content.Context"/>
@@ -59,4 +58,6 @@
 <fullyQualifiedTypeName name="com.example.activityregistrator.ActivityRegistrator"/>
 <fullyQualifiedTypeName name="features.MyFeatures3"/>
 <fullyQualifiedTypeName name="features.MyFeatures4"/>
+<fullyQualifiedTypeName name="java.util.Scanner"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
 </qualifiedTypeNameHistroy>
