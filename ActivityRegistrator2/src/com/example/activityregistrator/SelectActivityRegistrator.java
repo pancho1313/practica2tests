@@ -97,7 +97,7 @@ public class SelectActivityRegistrator extends Activity {
 		featuresMax[2] = 4166.345f;
 		featuresMax[3] = 1696.9004f;
 		
-		float zero = (scaleH + scaleL)/2;
+		float zero = (featuresMax[i] + featuresMin[i])/2;
 		float dif;
 		for(int i = 0; i < features.length; i++){
 			dif = zero - features[i];
