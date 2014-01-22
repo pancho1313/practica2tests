@@ -77,8 +77,8 @@ public class SelectActivityRegistrator extends Activity {
 	
 	private void scaleFeatures(float[] features){
 		String TAG = "scaleFeatures";
-		Log.d(TAG, "[ 1.1407704 2.9884565 171.4136 400.23703 ] (input)");
-		features = new float[]{1.1407704f, 2.9884565f, 171.4136f, 400.23703f};
+		Log.d(TAG, "[ 70 40 15 81 ] (input)");
+		features = new float[]{70, 40, 15, 81};
 		/////////////////////////////////
 		
 		float scaleH = 1;
@@ -86,29 +86,35 @@ public class SelectActivityRegistrator extends Activity {
 
 		float[] featuresMax = new float[features.length];
 		float[] featuresMin = new float[features.length];
+		/*
+		760 16 255
+		761 15 245
+		762 14 247
+		763 18 255
+		*/
+		featuresMin[0] = 16;
+		featuresMin[1] = 15;
+		featuresMin[2] = 14;
+		featuresMin[3] = 18;
 		
-		featuresMin[0] = 0.5763978f;
-		featuresMin[1] = 0.6271618f;
-		featuresMin[2] = 41.775806f;
-		featuresMin[3] = 207.24507f;
+		featuresMax[0] = 255;
+		featuresMax[1] = 245;
+		featuresMax[2] = 247;
+		featuresMax[3] = 255;
 		
-		featuresMax[0] = 5.0268035f;
-		featuresMax[1] = 15.986454f;
-		featuresMax[2] = 4166.345f;
-		featuresMax[3] = 1696.9004f;
 		
-		float zero = (featuresMax[i] + featuresMin[i])/2;
-		float dif;
 		for(int i = 0; i < features.length; i++){
-			dif = zero - features[i];
+			float zero = (featuresMax[i] + featuresMin[i])/2;
+			float dif = features[i] - zero;
 			features[i] = (dif * (scaleH - scaleL))/(featuresMax[i] - featuresMin[i]);
 		}
 		////////////////
-		Log.d(TAG, "[ ");
+		String s = "[ ";
 		for(float f : features){
-			Log.d(TAG, f+" ");
+			s+= f+" ";
 		}
-		Log.d(TAG, "] (your's)");
-		Log.d(TAG, "[ -0.807638 -0.697996 -0.945516 -0.797683 ] (libsvm)");
+		s+="] (your's)";
+		Log.d(TAG, s);
+		Log.d(TAG, "[ -0.548117 -0.782609 -0.991416 -0.468354 ] (libsvm)");
 	}
 }
