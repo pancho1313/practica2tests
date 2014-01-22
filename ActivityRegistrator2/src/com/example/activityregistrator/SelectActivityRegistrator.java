@@ -5,6 +5,8 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.Scanner;
 
+import windowdata.WindowHalfOverlap;
+
 import myutil.AssetsPropertyReader;
 import android.os.Bundle;
 import android.app.Activity;
@@ -19,8 +21,6 @@ import android.widget.Toast;
 
 public class SelectActivityRegistrator extends Activity {
 
-	private AssetsPropertyReader assetsPropertyReader;
-    private Context context;
     private Properties properties;
 
 	
@@ -29,18 +29,14 @@ public class SelectActivityRegistrator extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_select_activity_registrator);
 		
-		//keep screen on
+		// keep screen on
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
 		// .properties
-		context = this;
-        assetsPropertyReader = new AssetsPropertyReader(context);
+		AssetsPropertyReader assetsPropertyReader = new AssetsPropertyReader(this);
         properties = assetsPropertyReader.getProperties("ActivityRegistrator.properties");
          
         showProperties();
-        
-        //TODO delete
-        scaleFeatures(null);
 	}
 
 	@Override
@@ -77,44 +73,53 @@ public class SelectActivityRegistrator extends Activity {
 	
 	private void scaleFeatures(float[] features){
 		String TAG = "scaleFeatures";
-		Log.d(TAG, "[ 70 40 15 81 ] (input)");
-		features = new float[]{70, 40, 15, 81};
-		/////////////////////////////////
+		Log.d(TAG, "[ 1.2627743 6.3329363 247.03587 407.84216 ] (input)");
+		features = new float[]{1.2627743f, 6.3329363f, 247.03587f, 407.84216f};
 		
+		///////////////////////////////read from .properties
 		float scaleH = 1;
 		float scaleL = -1;
 
 		float[] featuresMax = new float[features.length];
 		float[] featuresMin = new float[features.length];
 		/*
-		760 16 255
-		761 15 245
-		762 14 247
-		763 18 255
+		1 0.7140552 5.150639
+		2 0.66037196 16.077961
+		3 64.83476 3977.108
+		4 255.21948 1688.7849
 		*/
-		featuresMin[0] = 16;
-		featuresMin[1] = 15;
-		featuresMin[2] = 14;
-		featuresMin[3] = 18;
+		featuresMin[0] = 0.7140552f;
+		featuresMin[1] = 0.66037196f;
+		featuresMin[2] = 64.83476f;
+		featuresMin[3] = 255.21948f;
 		
-		featuresMax[0] = 255;
-		featuresMax[1] = 245;
-		featuresMax[2] = 247;
-		featuresMax[3] = 255;
+		featuresMax[0] = 5.150639f;
+		featuresMax[1] = 16.077961f;
+		featuresMax[2] = 3977.108f;
+		featuresMax[3] = 1688.7849f;
 		
-		
+		///////////////precalculate data
+		float scaleZero = (scaleH + scaleL)/2;
+		float scaleDif = scaleH - scaleL;
+		float[] featuresZero = new float[features.length];
+		float[] featuresDif = new float[features.length];
 		for(int i = 0; i < features.length; i++){
-			float zero = (featuresMax[i] + featuresMin[i])/2;
-			float dif = features[i] - zero;
-			features[i] = (dif * (scaleH - scaleL))/(featuresMax[i] - featuresMin[i]);
+			featuresZero[i] = (featuresMax[i] + featuresMin[i])/2;
+			featuresDif[i] = featuresMax[i] - featuresMin[i];
 		}
+		
+		////////////////runtime calculation
+		for(int i = 0; i < features.length; i++){
+			features[i] = scaleZero + ((features[i] - featuresZero[i]) * scaleDif)/featuresDif[i];
+		}
+		
 		////////////////
 		String s = "[ ";
 		for(float f : features){
 			s+= f+" ";
 		}
-		s+="] (your's)";
+		s+="] (your scale)";
 		Log.d(TAG, s);
-		Log.d(TAG, "[ -0.548117 -0.782609 -0.991416 -0.468354 ] (libsvm)");
+		Log.d(TAG, "[ -0.752639 -0.264144 -0.906857 -0.787073 ] (libsvm.scale)");
 	}
 }

@@ -61,4 +61,21 @@ public class WindowHalfOverlap implements IWindowData
 		window = new float[floatsPerData][wSize];
 		nextIndex = 0;
 	}
+	
+	public static void testMe(){
+		String TAG = "testMe";
+		WindowHalfOverlap w = new WindowHalfOverlap(8, 2);
+		for(int i = 0; i < 24; i++){
+			if(w.addData(new float[]{i,-i})){
+				float[] data1 = w.getData(0);
+				float[] data2 = w.getData(1);
+				String s = "data: [ ";
+				for(int j = 0; j < data1.length; j++){
+					s+="("+data1[j]+" "+data2[j]+") ";
+				}
+				s+="]";
+				Log.d(TAG,s);
+			}
+		}
+	}
 }

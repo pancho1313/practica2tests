@@ -23,7 +23,6 @@
 <fullyQualifiedTypeName name="android.content.pm.PackageManager"/>
 <fullyQualifiedTypeName name="android.widget.Button"/>
 <fullyQualifiedTypeName name="android.opengl.Matrix"/>
-<fullyQualifiedTypeName name="windowdata.WindowHalfOverlap"/>
 <fullyQualifiedTypeName name="windowdata.IWindowData"/>
 <fullyQualifiedTypeName name="features.IFeatures"/>
 <fullyQualifiedTypeName name="activitydecision.IActivityRecognizer"/>
@@ -60,4 +59,5 @@
 <fullyQualifiedTypeName name="features.MyFeatures4"/>
 <fullyQualifiedTypeName name="java.util.Scanner"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="windowdata.WindowHalfOverlap"/>
 </qualifiedTypeNameHistroy>

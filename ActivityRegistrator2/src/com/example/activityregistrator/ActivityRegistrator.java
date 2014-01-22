@@ -49,6 +49,7 @@ public class ActivityRegistrator extends Activity {
 	}
 	
 	public void stop(View v){
+		((Button)v).setEnabled(false);
 		Intent i = new Intent("com.example.activityregistrator.END_AND_SAVE");
 		sendBroadcast(i);
 		

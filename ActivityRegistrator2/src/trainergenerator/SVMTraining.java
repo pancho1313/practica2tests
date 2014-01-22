@@ -322,7 +322,6 @@ public class SVMTraining {
 		    						prevLabel = actualLabel;
 		    					
 		    					prevState = prevLabel;
-		    					
 		    					data = new float[]{(float)vecLength(linearAccel), prevState};
 		    				}else if(featuresType == MyFeatures4.FEATURES_TYPE){
 		    					// prev state

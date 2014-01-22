@@ -40,7 +40,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     	
     	windowData = new WindowHalfOverlap();
 		myFeatures = new MyFeatures();
-		activityRecognizer = new SvmRecognizer();
+		activityRecognizer = new SvmRecognizer(this);
     }
     
 	@Override
@@ -104,8 +104,8 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     
     private void mytest(){
     	//Log.d("SvmRecognizer", "test()");
-    	SvmRecognizer mysvm = new SvmRecognizer();
-    	mysvm.train();
+    	SvmRecognizer mysvm = new SvmRecognizer(this);
+    	//mysvm.train();
     	mysvm.classify();
     	
     }

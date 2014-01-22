@@ -1,55 +1,84 @@
 package activityrecognition;
 
+import java.util.Properties;
+
+import myutil.AssetsPropertyReader;
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 public class SvmRecognizer implements IActivityRecognizer {
 
 	private static String TAG = "SvmRecognizer";
+	// scale
+    private Properties properties;
+    float scaleZero;
+	float scaleDif;
+	float[] featuresZero;
+	float[] featuresDif;
 	
+    public SvmRecognizer(Context context){
+    	// .properties
+    	AssetsPropertyReader assetsPropertyReader = new AssetsPropertyReader(context);
+        properties = assetsPropertyReader.getProperties("MyOnBikeRecog.properties");
+        
+        // scale
+        preCalculateScaleFeatures();
+        
+        //TODO: delete this test
+        //scaleFeatures(new float[]{1.2627743f, 6.3329363f, 247.03587f, 407.84216f});
+    }
+    
 	public int getUserRecognizedActivity(float[] features){
 		// TODO
 		//scaleFeatures(features);
 		return 1;
 	}
-	
-	
-	private void scaleFeatures(float[] features){
+	//////////scale////////////////////////////////////////////////////////////////////
+	private void preCalculateScaleFeatures(){
+		// read from .properties
+		float scaleH = Float.parseFloat(properties.getProperty("scaleH"));
+		float scaleL = Float.parseFloat(properties.getProperty("scaleL"));
 		
-		Log.d(TAG, "[ 1.1407704 2.9884565 171.4136 400.23703 ] (input)");
-		features = new float[]{1.1407704f, 2.9884565f, 171.4136f, 400.23703f};
-		/////////////////////////////////
+		int featuresLength = Integer.parseInt(properties.getProperty("featuresLength"));
+		float[] featuresMax = new float[featuresLength];
+		float[] featuresMin = new float[featuresLength];
 		
-		float scaleH = 1;
-		float scaleL = -1;
-
-		float[] featuresMax = new float[features.length];
-		float[] featuresMin = new float[features.length];
-		
-		featuresMin[0] = 0.5763978f;
-		featuresMin[1] = 0.6271618f;
-		featuresMin[2] = 41.775806f;
-		featuresMin[3] = 207.24507f;
-		
-		featuresMax[0] = 5.0268035f;
-		featuresMax[1] = 15.986454f;
-		featuresMax[2] = 4166.345f;
-		featuresMax[3] = 1696.9004f;
-		
-		float zero = (scaleH + scaleL)/2;
-		float dif;
-		for(int i = 0; i < features.length; i++){
-			dif = zero - features[i];
-			features[i] = (dif * (scaleH - scaleL))/(featuresMax[i] - featuresMin[i]);
+		for(int i = 0; i < featuresLength; i++){
+			featuresMin[i] = Float.parseFloat(properties.getProperty((i+1)+"L"));
+			featuresMax[i] = Float.parseFloat(properties.getProperty((i+1)+"H"));
 		}
-		////////////////
-		Log.d(TAG, "[ ");
-		for(float f : features){
-			Log.d(TAG, f+" ");
+		
+		// precalculate data
+		scaleZero = (scaleH + scaleL)/2;
+		scaleDif = scaleH - scaleL;
+		featuresZero = new float[featuresLength];
+		featuresDif = new float[featuresLength];
+		for(int i = 0; i < featuresLength; i++){
+			featuresZero[i] = (featuresMax[i] + featuresMin[i])/2;
+			featuresDif[i] = featuresMax[i] - featuresMin[i];
 		}
-		Log.d(TAG, "] (your's)");
-		Log.d(TAG, "[ -0.807638 -0.697996 -0.945516 -0.797683 ] (libsvm)");
 	}
-	/////////////////////////////////////////////////////////
+	private void scaleFeatures(float[] features){
+		/*
+		String TAG = "scaleFeatures";
+		Log.d(TAG, "[ 1.2627743 6.3329363 247.03587 407.84216 ] (input)");
+		*/
+		
+		for(int i = 0; i < features.length; i++){
+			features[i] = scaleZero + ((features[i] - featuresZero[i]) * scaleDif)/featuresDif[i];
+		}
+		
+		/*
+		String s = "[ ";
+		for(float f : features){
+			s+= f+" ";
+		}
+		s+="] (your scale)";
+		Log.d(TAG, s);
+		Log.d(TAG, "[ -0.752639 -0.264144 -0.906857 -0.787073 ] (libsvm.scale)");
+		*/
+	}
+	/////////////////////////////////////////////////////////////////////////////////
 	
 	// svm native
     private native int trainClassifierNative(String trainingFile, int kernelType,
@@ -160,7 +189,7 @@ public class SvmRecognizer implements IActivityRecognizer {
         int[] labels = new int[4];
         double[] probs = new double[4];
         int isProb = 0; // Not probability prediction
-        String modelFileLoc = Environment.getExternalStorageDirectory()+"/model";
+        String modelFileLoc = Environment.getExternalStorageDirectory()+"/training_set.model"; // "/model" "/training_set.model"
 
         if (callSVM(values, indices, groundTruth, isProb, modelFileLoc, labels, probs) != 0) {
                 Log.d(TAG, "Classification is incorrect");
