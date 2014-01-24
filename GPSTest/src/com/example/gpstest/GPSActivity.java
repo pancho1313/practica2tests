@@ -74,7 +74,7 @@ public class GPSActivity extends Activity {
     	LogReciever = new BroadcastReceiver() {
 		    @Override
 		    public void onReceive(Context context, Intent intent) {
-		    	log+="\n"+intent.getStringExtra("log");
+		    	log = intent.getStringExtra("log")+"\n"+log;
 		    	((TextView)findViewById(R.id.textView)).setText(log);
 		    }
 		  };

@@ -1,5 +1,6 @@
 package com.example.gpstest;
 
+
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -103,15 +104,12 @@ public class GPSservice extends Service implements LocationListener {
 
 		loc.getLatitude();
 		loc.getLongitude();
-		String Text = "My current location is: " +
-		"Latitud = " + loc.getLatitude() +
+		String text = "Latitud = " + loc.getLatitude() +
 		"Longitud = " + loc.getLongitude();
 		
-		Toast.makeText( getApplicationContext(),
-		Text,
-		Toast.LENGTH_SHORT).show();
-		
-		updateLog("updates: "+(updates++));
+		updateLog((updates++)+": "+text);
+		//long time = loc.getElapsedRealtimeNanos();
+		saveData(text);
 	}
 
 	@Override
@@ -137,5 +135,11 @@ public class GPSservice extends Service implements LocationListener {
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras){}
     
+	
+	private void saveData(String data){
+    	Intent intent = new Intent(this, SaveFileIntentService.class);
+    	intent.putExtra("data", data);
+    	startService(intent);
+    }
 	
 }
