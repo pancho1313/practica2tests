@@ -44,7 +44,7 @@ public class TrainingGeneratorIntentService extends IntentService {
 		outFolder = intent.getStringExtra("outFolder"),
 		outFile = intent.getStringExtra("outFile");
 		
-		handleCommand(intent);
+		handleCommand(intent, outFile);
 		
 		int wSize = Integer.parseInt((String) properties.get("wSize"));
 		int featuresType;
@@ -85,12 +85,12 @@ public class TrainingGeneratorIntentService extends IntentService {
 		}
 	}
 	
-	private void handleCommand(Intent i){
+	private void handleCommand(Intent i, String outFile){
 		NotificationCompat.Builder mBuilder =
 		        new NotificationCompat.Builder(this)
 		        .setSmallIcon(R.drawable.ic_launcher)
 		        .setContentTitle("TrainingService")
-		        .setContentText(TAG);
+		        .setContentText(outFile);
 		
 		PendingIntent pIntent = PendingIntent.getService(this.getApplicationContext(), 0, i,PendingIntent.FLAG_UPDATE_CURRENT);
 		mBuilder.setContentIntent(pIntent);
