@@ -9,11 +9,6 @@ import android.os.Environment;
 public class SvmBicycleRecognizerIntentService extends IntentService implements SvmRecognizerIntentServiceInterface {
 	private String TAG = "SvmBicycleRecognizerIntentService";
 	
-	public static final int NOT_MOVING = 1; // Must be >0
-	public static final int CRUISE = 2; // Must be >0
-	public static final int ACCELERATING = 3; // Must be >0
-	public static final int BREAKING = 4; // Must be >0
-	
 	private final String modelFile = Environment.getExternalStorageDirectory() + "/trainingBike.64.1.txt.model";
 	private static final int wSize = 64;
 	private static final int floatsPerWindowData = MyFeatures1.FLOATS_PER_WINDOW_DATA;
