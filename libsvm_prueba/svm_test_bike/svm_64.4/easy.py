@@ -12,9 +12,9 @@ if len(sys.argv) <= 1:
 
 is_win32 = (sys.platform == 'win32')
 if not is_win32:
-	svmscale_exe = "./svm-scale"
-	svmtrain_exe = "./svm-train"
-	svmpredict_exe = "./svm-predict"
+	svmscale_exe = "../../libsvm_easy_files/svm-scale"
+	svmtrain_exe = "../../libsvm_easy_files/svm-train"
+	svmpredict_exe = "../../libsvm_easy_files/svm-predict"
 	grid_py = "./grid.py"
 	gnuplot_exe = "/usr/bin/gnuplot"
 else:
