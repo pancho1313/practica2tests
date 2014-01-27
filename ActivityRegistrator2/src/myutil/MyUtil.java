@@ -57,4 +57,8 @@ public class MyUtil {
 	    return file;
 	}
 	
+	public static double vecLength(float[] v){
+    	return Math.sqrt(Math.pow(v[0], 2)+Math.pow(v[1], 2)+Math.pow(v[2], 2));
+    }
+	
 }

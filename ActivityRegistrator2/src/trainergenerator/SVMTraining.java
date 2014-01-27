@@ -288,33 +288,9 @@ public class SVMTraining {
 		    				if(featuresType == MyFeatures2.FEATURES_TYPE){
 		    					
 			    				float[] gData = {scanSD.nextFloat(), scanSD.nextFloat(), scanSD.nextFloat()};
-			    				
-			    				// get the length horizontal and vertical (global) components of linear acceleration
-			    				float[] lAccHorizontal = new float[3];
-			    				float[] lAccVertical = new float[3];
-			    				
-			    					// scale factor for gData
-			    				double dividend = (Math.pow(gData[0], 2) + Math.pow(gData[1], 2) + Math.pow(gData[2], 2));
-			    				if(dividend == 0){
-			    					dividend = 0.0000001;
-			    				}
-			    				float c = (float) (-1 * (
-			    						(gData[0]*linearAccel[0] + gData[1]*linearAccel[1] + gData[2]*linearAccel[2])
-			    						/
-			    						dividend
-			    						));
-			    				
-			    				lAccVertical[0] = gData[0] * c;
-			    				lAccVertical[1] = gData[1] * c;
-			    				lAccVertical[2] = gData[2] * c;
-			    				
-			    				lAccHorizontal[0] = lAccVertical[0] + linearAccel[0];
-			    				lAccHorizontal[1] = lAccVertical[1] + linearAccel[1];
-			    				lAccHorizontal[2] = lAccVertical[2] + linearAccel[2];
-			    				
-			    				data = new float[]{(float)vecLength(lAccHorizontal), (float)vecLength(lAccVertical)};
+			    				data = MyFeatures2.getDataForWindowData(linearAccel, gData);
 		    				}else if(featuresType == MyFeatures1.FEATURES_TYPE){
-		    					data = new float[]{(float)vecLength(linearAccel)};
+		    					data = MyFeatures1.getDataForWindowData(linearAccel);
 		    				}else if(featuresType == MyFeatures3.FEATURES_TYPE){
 		    					float prevState = 0;
 		    					
@@ -322,7 +298,7 @@ public class SVMTraining {
 		    						prevLabel = actualLabel;
 		    					
 		    					prevState = prevLabel;
-		    					data = new float[]{(float)vecLength(linearAccel), prevState};
+		    					data = MyFeatures3.getDataForWindowData(linearAccel, prevState);
 		    				}else if(featuresType == MyFeatures4.FEATURES_TYPE){
 		    					// prev state
 		    					float prevState = 0;
@@ -332,36 +308,9 @@ public class SVMTraining {
 		    					else
 		    						prevState = prevLabel;
 		    					
-		    					// horizontal, vertical linear acceleration
 		    					float[] gData = {scanSD.nextFloat(), scanSD.nextFloat(), scanSD.nextFloat()};
-			    				
-			    				// get the length horizontal and vertical (global) components of linear acceleration
-			    				float[] lAccHorizontal = new float[3];
-			    				float[] lAccVertical = new float[3];
-			    				
-			    					// scale factor for gData
-			    				double dividend = (Math.pow(gData[0], 2) + Math.pow(gData[1], 2) + Math.pow(gData[2], 2));
-			    				if(dividend == 0){
-			    					dividend = 0.0000001;
-			    				}
-			    				float c = (float) (-1 * (
-			    						(gData[0]*linearAccel[0] + gData[1]*linearAccel[1] + gData[2]*linearAccel[2])
-			    						/
-			    						dividend
-			    						));
-			    				
-			    				lAccVertical[0] = gData[0] * c;
-			    				lAccVertical[1] = gData[1] * c;
-			    				lAccVertical[2] = gData[2] * c;
-			    				
-			    				lAccHorizontal[0] = lAccVertical[0] + linearAccel[0];
-			    				lAccHorizontal[1] = lAccVertical[1] + linearAccel[1];
-			    				lAccHorizontal[2] = lAccVertical[2] + linearAccel[2];
-			    				
-		    					data = new float[]{
-		    							(float)vecLength(lAccHorizontal),
-		    							(float)vecLength(lAccVertical),
-		    							prevState};
+		    					
+		    					data = MyFeatures4.getDataForWindowData(linearAccel, gData, prevState);
 		    				}
 		    				
 		    				// add data to windowData

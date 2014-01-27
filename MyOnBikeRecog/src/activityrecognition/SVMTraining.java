@@ -7,7 +7,6 @@ import java.util.*;
 import windowdata.IWindowData;
 import windowdata.WindowHalfOverlap;
 import features.IFeatures;
-import features.MyFeatures;
 
 public class SVMTraining {
 	
@@ -33,7 +32,7 @@ public class SVMTraining {
 	        e.printStackTrace();
 	    }
 	}
-	
+	/*
 	public static void main(String[] args) {
 	    IWindowData windowData = new WindowHalfOverlap(64);
 	    IFeatures myFeatures = new MyFeatures();
@@ -118,4 +117,5 @@ public class SVMTraining {
 	    
 	    
 	}
+	*/
 }

@@ -1,82 +1,37 @@
 package activityrecognition;
 
-import java.util.Properties;
-
-import myutil.AssetsPropertyReader;
-import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 public class SvmRecognizer implements IActivityRecognizer {
 
 	private static String TAG = "SvmRecognizer";
 	// scale
-    private Properties properties;
+    //private Properties properties;
     float scaleZero;
 	float scaleDif;
 	float[] featuresZero;
 	float[] featuresDif;
 	
-    public SvmRecognizer(Context context){
-    	// .properties
-    	AssetsPropertyReader assetsPropertyReader = new AssetsPropertyReader(context);
-        properties = assetsPropertyReader.getProperties("MyOnBikeRecog.properties");
-        
+    public SvmRecognizer(float scaleH, float scaleL, float[] featuresMin, float[] featuresMax){
         // scale
-        preCalculateScaleFeatures();
-        
-        //TODO: delete this test
-        //scaleFeatures(new float[]{1.2627743f, 6.3329363f, 247.03587f, 407.84216f});
+        preCalculateScaleFeatures(scaleH, scaleL, featuresMin, featuresMax);
     }
-    
-	public int getUserRecognizedActivity(float[] features){
-		// TODO
-		//scaleFeatures(features);
-		return 1;
-	}
 	//////////scale////////////////////////////////////////////////////////////////////
-	private void preCalculateScaleFeatures(){
-		// read from .properties
-		float scaleH = Float.parseFloat(properties.getProperty("scaleH"));
-		float scaleL = Float.parseFloat(properties.getProperty("scaleL"));
-		
-		int featuresLength = Integer.parseInt(properties.getProperty("featuresLength"));
-		float[] featuresMax = new float[featuresLength];
-		float[] featuresMin = new float[featuresLength];
-		
-		for(int i = 0; i < featuresLength; i++){
-			featuresMin[i] = Float.parseFloat(properties.getProperty((i+1)+"L"));
-			featuresMax[i] = Float.parseFloat(properties.getProperty((i+1)+"H"));
-		}
-		
+	private void preCalculateScaleFeatures(float scaleH, float scaleL, float[] featuresMin, float[] featuresMax){
 		// precalculate data
 		scaleZero = (scaleH + scaleL)/2;
 		scaleDif = scaleH - scaleL;
-		featuresZero = new float[featuresLength];
-		featuresDif = new float[featuresLength];
-		for(int i = 0; i < featuresLength; i++){
+		featuresZero = new float[featuresMax.length];
+		featuresDif = new float[featuresMax.length];
+		for(int i = 0; i < featuresMax.length; i++){
 			featuresZero[i] = (featuresMax[i] + featuresMin[i])/2;
 			featuresDif[i] = featuresMax[i] - featuresMin[i];
 		}
 	}
 	private void scaleFeatures(float[] features){
-		/*
-		String TAG = "scaleFeatures";
-		Log.d(TAG, "[ 1.2627743 6.3329363 247.03587 407.84216 ] (input)");
-		*/
-		
 		for(int i = 0; i < features.length; i++){
 			features[i] = scaleZero + ((features[i] - featuresZero[i]) * scaleDif)/featuresDif[i];
 		}
-		
-		/*
-		String s = "[ ";
-		for(float f : features){
-			s+= f+" ";
-		}
-		s+="] (your scale)";
-		Log.d(TAG, s);
-		Log.d(TAG, "[ -0.752639 -0.264144 -0.906857 -0.787073 ] (libsvm.scale)");
-		*/
 	}
 	/////////////////////////////////////////////////////////////////////////////////
 	
@@ -95,6 +50,30 @@ public class SvmRecognizer implements IActivityRecognizer {
             Log.e(TAG, "Hey, could not load native library signal");
         }
     }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    public boolean predict(float[][] featuresList, String modelFile, int labels[], double probs[]){
+    	int isProb = 1;
+    	int[][] indices = new int[featuresList.length][featuresList[0].length];
+
+    	for(int i = 0; i < indices.length; i++){
+    		for(int j = 0; j < indices[0].length; j++){
+    			indices[i][j] = j+1;
+    		}
+    	}
+    	
+    	for(int i = 0; i < featuresList.length; i++){
+    		scaleFeatures(featuresList[i]);
+    	}
+    	
+    	if(doClassificationNative(featuresList, indices, isProb, modelFile, labels, probs) != 0){
+    		return false;
+    	}else{
+    		return true;
+    	}
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    
     
     public void train() {
     	// Svm training
@@ -201,5 +180,4 @@ public class SvmRecognizer implements IActivityRecognizer {
         	Log.d(TAG, "DONE Clasification: "+m);
         }
     }
-	
 }

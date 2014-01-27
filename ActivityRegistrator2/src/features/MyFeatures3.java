@@ -1,5 +1,7 @@
 package features;
 
+import myutil.MyUtil;
+
 import com.example.activityregistrator.ActivityRegistrator;
 
 import windowdata.IWindowData;
@@ -78,5 +80,10 @@ public class MyFeatures3 implements IFeatures {
         	fftMag[i] = (float) x[i].conjugate().times(x[i]).re();
         
         return fftMag;
+	}
+	
+	public static float[] getDataForWindowData(float[] linearAccel, float prevState){
+		float[] data = new float[]{(float)MyUtil.vecLength(linearAccel), prevState};
+		return data;
 	}
 }

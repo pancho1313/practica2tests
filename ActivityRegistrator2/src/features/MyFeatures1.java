@@ -1,5 +1,6 @@
 package features;
 
+import myutil.MyUtil;
 import windowdata.IWindowData;
 import features.fft.*;
 
@@ -59,5 +60,10 @@ public class MyFeatures1 implements IFeatures {
         	fftMag[i] = (float) x[i].conjugate().times(x[i]).re();
         
         return fftMag;
+	}
+	
+	public static float[] getDataForWindowData(float[] linearAccel){
+		float[] data = new float[]{(float)MyUtil.vecLength(linearAccel)};
+		return data;
 	}
 }
