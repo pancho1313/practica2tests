@@ -49,18 +49,18 @@ public class SvmBicycleRecognizerIntentService extends IntentService implements 
 		};
 		
 		// predict
-		int[] statePredicted = new int[featuresListLength];
-		double[] predictionProbability = new double[featuresListLength];
+		int[] statesPredicted = new int[featuresListLength];
+		double[] predictionsProbabilities = new double[featuresListLength];
 		SvmRecognizer svmRecognizer = new SvmRecognizer(scaleH, scaleL, featuresMin, featuresMax);
 		svmRecognizer.predict(featuresList, modelFile, statePredicted, predictionProbability);
 		
-		sendPrediction(sendTo, statePredicted, predictionProbability);
+		sendPrediction(sendTo, statesPredicted, predictionsProbabilities);
 	}
 	
-	private void sendPrediction(String sendTo, int[] statePredicted, double[] predictionProbability){
+	private void sendPrediction(String sendTo, int[] statesPredicted, double[] predictionsProbabilities){
 		Intent i = new Intent(sendTo);
-		i.putExtra("statesPredicted", statePredicted);
-		i.putExtra("predictionsProbabilities", predictionProbability);
+		i.putExtra("statesPredicted", statesPredicted);
+		i.putExtra("predictionsProbabilities", predictionsProbabilities);
 		sendBroadcast(i);
 	}
 	
