@@ -52,7 +52,7 @@ public class SvmBicycleRecognizerIntentService extends IntentService implements 
 		int[] statesPredicted = new int[featuresListLength];
 		double[] predictionsProbabilities = new double[featuresListLength];
 		SvmRecognizer svmRecognizer = new SvmRecognizer(scaleH, scaleL, featuresMin, featuresMax);
-		svmRecognizer.predict(featuresList, modelFile, statePredicted, predictionProbability);
+		svmRecognizer.predict(featuresList, modelFile, statesPredicted, predictionsProbabilities);
 		
 		sendPrediction(sendTo, statesPredicted, predictionsProbabilities);
 	}
