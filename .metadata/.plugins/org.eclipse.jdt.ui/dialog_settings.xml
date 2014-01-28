@@ -3,9 +3,9 @@
 	<item value="2" key="TypeHierarchyViewPart.hierarchyview"/>
 	<item value="500" key="CallHierarchyViewPart.ratio3"/>
 	<item value="500" key="CallHierarchyViewPart.ratio1"/>
-	<item value="3" key="CallHierarchyViewPart.orientation"/>
-	<item value="false" key="TypeHierarchyViewPart.qualifiednames"/>
 	<item value="3" key="TypeHierarchyViewPart.orientation"/>
+	<item value="false" key="TypeHierarchyViewPart.qualifiednames"/>
+	<item value="3" key="CallHierarchyViewPart.orientation"/>
 	<item value="1" key="SearchScopeActionGroup.search_scope_type"/>
 	<item value="2" key="CallHierarchyViewPart.field_mode"/>
 	<item value="false" key="TypeHierarchyViewPart.linkeditors"/>
@@ -47,15 +47,15 @@
 	<section name="RenameInformationPopup">
 	</section>
 	<section name="org.eclipse.ltk.ui.refactoring.settings">
-		<item value="*" key="patterns"/>
-		<item value="false" key="updateQualifiedNames"/>
 		<item value="false" key="renameSubpackages"/>
+		<item value="false" key="updateQualifiedNames"/>
+		<item value="*" key="patterns"/>
 		<item value="false" key="updateTextualMatches"/>
 	</section>
 	<section name="NewClassWizardPage">
 		<item value="false" key="create_constructor"/>
-		<item value="true" key="create_unimplemented"/>
 		<item value="false" key="create_main"/>
+		<item value="true" key="create_unimplemented"/>
 	</section>
 	<section name="CallHierarchySearchScope">
 	</section>

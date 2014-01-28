@@ -36,16 +36,16 @@ public class SvmBicycleRecognizerIntentService extends IntentService implements 
 		float scaleH = 1f;
 		float scaleL = -1f;
 		float[] featuresMin = {
-				0.7140552f,
-				0.66037196f,
-				64.83476f,
-				255.21948f
+				0.5763978f,
+				0.6271618f,
+				41.775806f,
+				207.24507f
 		};
 		float[] featuresMax = {
 				5.150639f,
 				16.077961f,
-				3977.108f,
-				1688.7849f
+				4166.345f,
+				1696.9004f
 		};
 		
 		// predict
