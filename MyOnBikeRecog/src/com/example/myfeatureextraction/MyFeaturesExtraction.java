@@ -8,8 +8,9 @@ import features.MyFeatures3;
 import features.MyFeatures4;
 import windowdata.IWindowData;
 import windowdata.WindowHalfOverlap;
-import activityrecognition.SvmBicycleRecognizerIntentService;
-import activityrecognition.SvmCarRecognizerIntentService;
+import activityrecognition.SvmBicycleRecognizer;
+import activityrecognition.SvmCarRecognizer;
+import activityrecognition.SvmRecognizerIntentService;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -35,8 +36,8 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     private float prevState;
     private float prevStateProbability;
     
-    private final String sendToBicycleSVM = "com.example.myfeatureextraction.BICYCLE_PREDICTION";
-    private final String sendToCarSVM = "com.example.myfeatureextraction.CAR_PREDICTION";
+    public static final String sendToBicycleSVM = "com.example.myfeatureextraction.BICYCLE_PREDICTION";
+    public static final String sendToCarSVM = "com.example.myfeatureextraction.CAR_PREDICTION";
     
     private final int sensorType = Sensor.TYPE_LINEAR_ACCELERATION;
     private int sensorDelay = SensorManager.SENSOR_DELAY_FASTEST;
@@ -56,10 +57,10 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
         mSensor = mSensorManager.getDefaultSensor(sensorType);
         gSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
     	
-    	windowDataBicycle = SvmBicycleRecognizerIntentService.getNewWindowData();
-		myFeaturesBicycle = SvmBicycleRecognizerIntentService.getMyFeatures();
-		windowDataCar = SvmCarRecognizerIntentService.getNewWindowData();
-		myFeaturesCar = SvmCarRecognizerIntentService.getMyFeatures();
+    	windowDataBicycle = SvmBicycleRecognizer.getNewWindowData();
+		myFeaturesBicycle = SvmBicycleRecognizer.getMyFeatures();
+		windowDataCar = SvmCarRecognizer.getNewWindowData();
+		myFeaturesCar = SvmCarRecognizer.getMyFeatures();
 		
 		initRecievers();
 		
@@ -124,7 +125,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 	    		requestStatePrediction(sendToBicycleSVM, features);
 	    		
 	    	}
-	    	/*
+	    	
 	    	if(windowDataCar.addData(getDataForWindowData(linearAccel, myFeaturesCar.getFeaturesType()))){
 	    		// we have a complete windowData
 	    		
@@ -134,7 +135,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 	    		// report new array of features
 	    		addFeatures(sendToCarSVM, features);
 	    	}
-	    	*/
+	    	
     	}
     	
     	if (event.sensor.getType() == Sensor.TYPE_GRAVITY)
@@ -157,14 +158,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
      * @param features
      */
     private void requestStatePrediction(String sendTo, float[] features){
-    	Intent intent = null;
-    	
-    	if(sendTo.equals(sendToBicycleSVM)){
-    		intent = new Intent(this, SvmBicycleRecognizerIntentService.class);
-    	}else if(sendTo.equals(sendToCarSVM)){
-    		intent = new Intent(this, SvmCarRecognizerIntentService.class);
-    	}
-    	
+    	Intent intent = new Intent(this, SvmRecognizerIntentService.class);
     	intent.putExtra("features", features);
     	intent.putExtra("sendTo", sendTo);
     	
@@ -246,16 +240,16 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     private String stateToString(int state){
     	String s = "---";
     	switch(state){
-    	case SvmBicycleRecognizerIntentService.NOT_MOVING:
+    	case SvmRecognizerIntentService.NOT_MOVING:
     		s = "NOT_MOVING";
     		break;
-    	case SvmBicycleRecognizerIntentService.CRUISE:
+    	case SvmRecognizerIntentService.CRUISE:
     		s = "CRUISE";
     		break;
-    	case SvmBicycleRecognizerIntentService.ACCELERATING:
+    	case SvmRecognizerIntentService.ACCELERATING:
     		s = "ACCELERATING";
     		break;
-    	case SvmBicycleRecognizerIntentService.BREAKING:
+    	case SvmRecognizerIntentService.BREAKING:
     		s = "BREAKING";
     		break;
     	}

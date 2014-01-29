@@ -24,8 +24,7 @@
             </intent-filter>
         </activity>
         
-        <service android:name="activityrecognition.SvmBicycleRecognizerIntentService" ></service>
-        <service android:name="activityrecognition.SvmCarRecognizerIntentService" ></service>
+        <service android:name="activityrecognition.SvmRecognizerIntentService" ></service>
     </application>
 
 </manifest>

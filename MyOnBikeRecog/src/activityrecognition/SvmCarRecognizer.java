@@ -9,16 +9,13 @@ import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 
-public class SvmCarRecognizerIntentService extends SvmRecognizerIntentService {
+public class SvmCarRecognizer {
 	private static final int wSize = 64;
 	private static final int floatsPerWindowData = MyFeatures1.FLOATS_PER_WINDOW_DATA;
 	
-	public SvmCarRecognizerIntentService() {
-        super("SvmCarRecognizerIntentService");
-    }
+	public SvmCarRecognizer(){}
 	
-	@Override
-	protected void onHandleIntent(Intent intent) {
+	public void predictState(Intent intent, SvmRecognizerIntentService svmRecognizerIntentService) {
 		String modelFile = Environment.getExternalStorageDirectory() + "/trainingCar.64.1.txt.model";
 		
 		//libsvm scale ranges
@@ -37,7 +34,7 @@ public class SvmCarRecognizerIntentService extends SvmRecognizerIntentService {
 				1696.9004f
 		};
 		
-		predictState(intent, modelFile, wSize, floatsPerWindowData, scaleH, scaleL, featuresMin, featuresMax);
+		svmRecognizerIntentService.predictState(intent, modelFile, wSize, floatsPerWindowData, scaleH, scaleL, featuresMin, featuresMax);
 	}
 	
 	public static IWindowData getNewWindowData(){

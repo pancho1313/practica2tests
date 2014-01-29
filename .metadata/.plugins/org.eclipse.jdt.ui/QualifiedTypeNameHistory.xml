@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="android.os.SystemClock"/>
 <fullyQualifiedTypeName name="android.view.WindowManager"/>
 <fullyQualifiedTypeName name="java.sql.Date"/>
 <fullyQualifiedTypeName name="java.util.Date"/>
@@ -57,7 +56,8 @@
 <fullyQualifiedTypeName name="android.widget.TextView"/>
 <fullyQualifiedTypeName name="windowdata.IWindowData"/>
 <fullyQualifiedTypeName name="features.IFeatures"/>
-<fullyQualifiedTypeName name="activityrecognition.SvmRecognizerIntentService"/>
 <fullyQualifiedTypeName name="activityrecognition.SvmCarRecognizerIntentService"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="com.example.myfeatureextraction.MyFeaturesExtraction"/>
+<fullyQualifiedTypeName name="activityrecognition.SvmRecognizerIntentService"/>
 </qualifiedTypeNameHistroy>

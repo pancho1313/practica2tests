@@ -1,5 +1,7 @@
 package activityrecognition;
 
+import com.example.myfeatureextraction.MyFeaturesExtraction;
+
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
@@ -13,14 +15,20 @@ public class SvmRecognizerIntentService extends IntentService {
 	public static final int ACCELERATING = 3; // Must be >0
 	public static final int BREAKING = 4; // Must be >0
 	
-	public SvmRecognizerIntentService(String id) {
-        super(id);
+	public SvmRecognizerIntentService() {
+        super("SvmRecognizerIntentService");
     }
 	
 	protected void onHandleIntent(Intent intent) {
+		String sendTo = intent.getStringExtra("sendTo");
+		if(sendTo.equals(MyFeaturesExtraction.sendToBicycleSVM)){
+			(new SvmBicycleRecognizer()).predictState(intent, this);
+		}else if(sendTo.equals(MyFeaturesExtraction.sendToCarSVM)){
+			(new SvmCarRecognizer()).predictState(intent, this);
+		}
 	}
 	
-	protected void predictState(
+	public void predictState(
 			Intent intent,
 			String modelFile,
 			int wSize,

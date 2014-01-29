@@ -7,16 +7,13 @@ import windowdata.WindowHalfOverlap;
 import android.content.Intent;
 import android.os.Environment;
 
-public class SvmBicycleRecognizerIntentService extends SvmRecognizerIntentService {
+public class SvmBicycleRecognizer {
 	private static final int wSize = 64;
 	private static final int floatsPerWindowData = MyFeatures1.FLOATS_PER_WINDOW_DATA;
 	
-	public SvmBicycleRecognizerIntentService() {
-        super("SvmBicycleRecognizerIntentService");
-    }
+	public SvmBicycleRecognizer(){}
 	
-	@Override
-	protected void onHandleIntent(Intent intent) {
+	public void predictState(Intent intent, SvmRecognizerIntentService svmRecognizerIntentService) {
 		String modelFile = Environment.getExternalStorageDirectory() + "/trainingBike.64.1.txt.model";
 		
 		//libsvm scale ranges
@@ -35,7 +32,7 @@ public class SvmBicycleRecognizerIntentService extends SvmRecognizerIntentServic
 				1696.9004f
 		};
 		
-		predictState(intent, modelFile, wSize, floatsPerWindowData, scaleH, scaleL, featuresMin, featuresMax);
+		svmRecognizerIntentService.predictState(intent, modelFile, wSize, floatsPerWindowData, scaleH, scaleL, featuresMin, featuresMax);
 	}
 	
 	public static IWindowData getNewWindowData(){
