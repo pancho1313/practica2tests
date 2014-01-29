@@ -62,7 +62,7 @@ c,g,rate = map(float,last_line.split())
 
 print('Best c={0}, g={1} CV rate={2}'.format(c,g,rate))
 
-cmd = '{0} -c {1} -g {2} "{3}" "{4}"'.format(svmtrain_exe,c,g,scaled_file,model_file)
+cmd = '{0} -b 1 -c {1} -g {2} "{3}" "{4}"'.format(svmtrain_exe,c,g,scaled_file,model_file)
 print('Training...')
 Popen(cmd, shell = True, stdout = PIPE).communicate()
 

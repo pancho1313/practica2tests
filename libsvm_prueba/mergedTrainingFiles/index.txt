@@ -41,35 +41,35 @@ testBike.64.2.txt
 
 ------------------------------
 
-trainingBike.128.2.txt
+trainingBike.128.2.txt (ready)
     trainingData_13.128.2.txt
     trainingData_14.128.2.txt
     trainingData_15.128.2.txt
     trainingData_16.128.2.txt
 
-testBike.128.2.txt
+testBike.128.2.txt (ready)
     trainingData_5.128.2.txt
     trainingData_8.128.2.txt
     trainingData_11.128.2.txt
 
 ------------------------------
 
-trainingBike.64.3.txt
+trainingBike.64.3.txt (ready)
     trainingData_1.64.3.txt
     trainingData_2.64.3.txt
 
-testBike.64.3.txt
+testBike.64.3.txt (ready)
     trainingData_5.64.3.txt
     trainingData_8.64.3.txt
     trainingData_11.64.3.txt
 
 ------------------------------
 
-trainingBike.128.3.txt
+trainingBike.128.3.txt (ready)
     trainingData_1.128.3.txt
     trainingData_2.128.3.txt
 
-testBike.128.3.txt
+testBike.128.3.txt (ready)
     trainingData_5.128.3.txt
     trainingData_8.128.3.txt
     trainingData_11.128.3.txt
@@ -147,39 +147,39 @@ testCar.64.2.txt
 
 ------------------------------
 
-trainingCar.128.2.txt
+trainingCar.128.2.txt (ready)
     trainingData_12.128.2.txt
     trainingData_4.128.2.txt
     trainingData_7.128.2.txt
     trainingData_10.128.2.txt
 
-testCar.128.2.txt
+testCar.128.2.txt (ready)
     trainingData_17.128.2.txt
     trainingData_6.128.2.txt
     trainingData_9.128.2.txt
 
 ------------------------------
 
-trainingCar.64.3.txt
+trainingCar.64.3.txt (ready)
     trainingData_0.64.3.txt
     trainingData_4.64.3.txt
     trainingData_7.64.3.txt
     trainingData_10.64.3.txt
 
-testCar.64.3.txt
+testCar.64.3.txt (ready)
     trainingData_3.64.3.txt
     trainingData_6.64.3.txt
     trainingData_9.64.3.txt
 
 ------------------------------
 
-trainingCar.128.3.txt
+trainingCar.128.3.txt (ready)
     trainingData_0.128.3.txt
     trainingData_4.128.3.txt
     trainingData_7.128.3.txt
     trainingData_10.128.3.txt
 
-testCar.128.3.txt
+testCar.128.3.txt (ready)
     trainingData_3.128.3.txt
     trainingData_6.128.3.txt
     trainingData_9.128.3.txt

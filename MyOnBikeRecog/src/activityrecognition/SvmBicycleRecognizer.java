@@ -14,22 +14,30 @@ public class SvmBicycleRecognizer {
 	public SvmBicycleRecognizer(){}
 	
 	public void predictState(Intent intent, SvmRecognizerIntentService svmRecognizerIntentService) {
-		String modelFile = Environment.getExternalStorageDirectory() + "/trainingBike.64.1.txt.model";
+		String modelFile = Environment.getExternalStorageDirectory() + "/trainingBike.128.3.txt.model";
 		
 		//libsvm scale ranges
 		float scaleH = 1f;
 		float scaleL = -1f;
 		float[] featuresMin = {
-				0.5763978f,
-				0.6271618f,
-				41.775806f,
-				207.24507f
+				0.5882687599999999f,
+				1.0850142f,
+				88.283646f,
+				598.6638f,
+				0f,
+				0f,
+				0f,
+				0f
 		};
 		float[] featuresMax = {
-				5.150639f,
-				16.077961f,
-				4166.345f,
-				1696.9004f
+				4.472457f,
+				21.731827f,
+				5934.718f,
+				4212.2583f,
+				1f,
+				1f,
+				1f,
+				1f
 		};
 		
 		svmRecognizerIntentService.predictState(intent, modelFile, wSize, floatsPerWindowData, scaleH, scaleL, featuresMin, featuresMax);

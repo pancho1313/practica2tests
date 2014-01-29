@@ -16,22 +16,31 @@ public class SvmCarRecognizer {
 	public SvmCarRecognizer(){}
 	
 	public void predictState(Intent intent, SvmRecognizerIntentService svmRecognizerIntentService) {
-		String modelFile = Environment.getExternalStorageDirectory() + "/trainingCar.64.1.txt.model";
+		String modelFile = Environment.getExternalStorageDirectory() + "/trainingCar.128.3.txt.model";
 		
 		//libsvm scale ranges
 		float scaleH = 1f;
 		float scaleL = -1f;
+		
 		float[] featuresMin = {
-				0.5763978f,
-				0.6271618f,
-				41.775806f,
-				207.24507f
+				0.121566325f,
+				1.2980267f,
+				4.071516f,
+				118.82734f,
+				0f,
+				0f,
+				0f,
+				0f
 		};
 		float[] featuresMax = {
-				5.150639f,
-				16.077961f,
-				4166.345f,
-				1696.9004f
+				2.545794f,
+				19.487278f,
+				2590.1914f,
+				2180.7207f,
+				1f,
+				1f,
+				1f,
+				1f
 		};
 		
 		svmRecognizerIntentService.predictState(intent, modelFile, wSize, floatsPerWindowData, scaleH, scaleL, featuresMin, featuresMax);
