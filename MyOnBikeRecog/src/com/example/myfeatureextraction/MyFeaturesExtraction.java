@@ -38,7 +38,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     private final String sendToBicycleSVM = "com.example.myfeatureextraction.BICYCLE_PREDICTION";
     private final String sendToCarSVM = "com.example.myfeatureextraction.CAR_PREDICTION";
     
-    private final int sensorType = Sensor.TYPE_ACCELEROMETER;//TYPE_LINEAR_ACCELERATION
+    private final int sensorType = Sensor.TYPE_LINEAR_ACCELERATION;
     private int sensorDelay = SensorManager.SENSOR_DELAY_FASTEST;
 
     private IWindowData windowDataBicycle;
@@ -121,7 +121,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 	    		float [] features = myFeaturesBicycle.getFeatures(windowDataBicycle);
 	    		
 	    		// report new array of features
-	    		addFeatures(sendToBicycleSVM, features);
+	    		requestStatePrediction(sendToBicycleSVM, features);
 	    		
 	    	}
 	    	/*
@@ -141,9 +141,10 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     		gData = event.values.clone();
     }
     
-    private void updateUserStateDisplay(String statePredicted, double predictionProbability){
+    private void updateUserStateDisplay(String statePredicted, float predictionProbability){
     	// TODO
-    	textView = statePredicted + " (" + predictionProbability + ")\n" + textView;
+    	String s = statePredicted + " " + predictionProbability + "\n";
+    	textView = s + textView;
     	refreshTextView();
     }
     
@@ -153,9 +154,9 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     
     /**
      * performs a states (may be more than one prediction) prediction request
-     * @param featuresList
+     * @param features
      */
-    private void requestStatePrediction(String sendTo, float[] featuresList){
+    private void requestStatePrediction(String sendTo, float[] features){
     	Intent intent = null;
     	
     	if(sendTo.equals(sendToBicycleSVM)){
@@ -164,7 +165,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     		intent = new Intent(this, SvmCarRecognizerIntentService.class);
     	}
     	
-    	intent.putExtra("featuresList", featuresList);
+    	intent.putExtra("features", features);
     	intent.putExtra("sendTo", sendTo);
     	
     	startService(intent);
@@ -189,11 +190,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     	bicycleActivityReceiver = new BroadcastReceiver() {
 		    @Override
 		    public void onReceive(Context context, Intent intent) {
-		    	
-		    	int statePredicted = intent.getIntExtra("statePredicted",1);// TODO: default
-		    	double[] classesProbabilities = intent.getDoubleArrayExtra("classesProbabilities");
-		    	
-		    	processPrediction(statePredicted, classesProbabilities);
+		    	processPrediction(sendToBicycleSVM, intent);
 		    }
 		};
 		 
@@ -205,10 +202,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 		carActivityReceiver = new BroadcastReceiver() {
 		    @Override
 		    public void onReceive(Context context, Intent intent) {
-		    	int statePredicted = intent.getIntExtra("statePredicted",1);// TODO: default
-		    	double[] classesProbabilities = intent.getDoubleArrayExtra("classesProbabilities");
-		    	
-		    	processPrediction(statePredicted, classesProbabilities);
+		    	processPrediction(sendToCarSVM, intent);
 		    }
 		};
 		 
@@ -225,20 +219,28 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     /**
      * here we can decide what to do with the prediction result
      * 
-     * @param statesPredicted
-     * @param predictionsProbabilities
+     * @param statePredicted
+     * @param classesProbabilities
      */
-    private void processPrediction(int statePredicted, double[] classesProbabilities){
-    	//TODO
-    	updateUserStateDisplay(stateToString(statePredicted), classesProbabilities[0]);//TODO get max probability
+    private void processPrediction(String from, Intent intent){
+    	
+    	int statePredicted = intent.getIntExtra("statePredicted",1);// TODO: default
+    	double stateProbability = intent.getDoubleExtra("stateProbability", -1);
+    	
+    	String id = "___";
+    	if(from.equals(sendToBicycleSVM))
+    		id = "BIKE ";
+    	if(from.equals(sendToCarSVM))
+    		id = "CAR ";
     	
     	// TODO IMPORTANT!!! update prevState and prevStateProbability wisely
     	
-    	if(classesProbabilities[0] < 0)
-    		Log.e(TAG, "classesProbabilities[0] < 0");
+
     	// TODO: decide prevState by prevStateProbability
     	prevState = statePredicted;
-    	prevStateProbability = (float) classesProbabilities[0];
+    	prevStateProbability = (statePredicted>0) ? (float) stateProbability : -1f;
+    	
+    	updateUserStateDisplay(id+stateToString(statePredicted), prevStateProbability);//TODO get max probability
     }
     
     private String stateToString(int state){

@@ -55,9 +55,9 @@
 <fullyQualifiedTypeName name="activityrecognition.SvmRecognizerIntentServiceInterface"/>
 <fullyQualifiedTypeName name="com.example.myfeatureextraction.R.id"/>
 <fullyQualifiedTypeName name="android.widget.TextView"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="windowdata.IWindowData"/>
 <fullyQualifiedTypeName name="features.IFeatures"/>
 <fullyQualifiedTypeName name="activityrecognition.SvmRecognizerIntentService"/>
 <fullyQualifiedTypeName name="activityrecognition.SvmCarRecognizerIntentService"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
 </qualifiedTypeNameHistroy>
