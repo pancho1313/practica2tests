@@ -1,5 +1,8 @@
 package activityrecognition;
 
+import java.io.IOException;
+
+import libsvm.*;
 import android.os.Environment;
 import android.util.Log;
 public class SvmRecognizer implements IActivityRecognizer {
@@ -35,21 +38,27 @@ public class SvmRecognizer implements IActivityRecognizer {
 	}
 	/////////////////////////////////////////////////////////////////////////////////
 	
-	// svm native
-    private native int trainClassifierNative(String trainingFile, int kernelType,
-    		int cost, float gamma, int isProb, String modelFile);
-    private native int doClassificationNative(float values[][], int indices[][],
-    		int isProb, String modelFile, int labels[], double probs[]);
-    
-    // Load the native library
-    static {
-        try {
-            System.loadLibrary("signal");
-            Log.d("SvmRecognizer", "System.loadLibrary('signal');");
-        } catch (UnsatisfiedLinkError ule) {
-            Log.e(TAG, "Hey, could not load native library signal");
-        }
-    }
+	private void libsvmPredict(float[] featuresList, String modelFile, int labels[], double probs[]){
+		svm_model model = null;
+		try {
+			model = svm.svm_load_model(modelFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(svm.svm_check_probability_model(model)==0){
+			Log.e(TAG,"Model does not support probabiliy estimates");
+		}
+		svm_node[] x = new svm_node[featuresList.length];
+		for(int j=0;j<featuresList.length;j++)
+		{
+			x[j] = new svm_node();
+			x[j].index = j+1;
+			x[j].value = featuresList[j];
+		}
+
+		double v= svm.svm_predict_probability(model,x,probs);
+	}
     
     ////////////////////////////////////////////////////////////////////////////
     public boolean predict(float[][] featuresList, String modelFile, int labels[], double probs[]){
@@ -76,20 +85,7 @@ public class SvmRecognizer implements IActivityRecognizer {
     ////////////////////////////////////////////////////////////////////////////
     
     
-    public void train() {
-    	// Svm training
-    	int kernelType = 2; // Radial basis function
-    	int cost = 4; // Cost
-    	int isProb = 0;
-    	float gamma = 0.25f; // Gamma
-    	String trainingFileLoc = Environment.getExternalStorageDirectory()+"/training_data/training_set";
-    	String modelFileLoc = Environment.getExternalStorageDirectory()+"/model";
-    	if (trainClassifierNative(trainingFileLoc, kernelType, cost, gamma, isProb,
-    			modelFileLoc) == -1) {
-    		Log.d(TAG, "training err");
-    	}
-    	Log.d(TAG, "DONE Training");
-    }
+
     
     /**
      * classify generate labels for features.

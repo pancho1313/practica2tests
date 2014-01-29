@@ -155,7 +155,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
      * performs a states (may be more than one prediction) prediction request
      * @param featuresList
      */
-    private void requestStatePrediction(String sendTo, float[][] featuresList){
+    private void requestStatePrediction(String sendTo, float[] featuresList){
     	Intent intent = null;
     	
     	if(sendTo.equals(sendToBicycleSVM)){
@@ -164,13 +164,8 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     		intent = new Intent(this, SvmCarRecognizerIntentService.class);
     	}
     	
-    	intent.putExtra("featuresList.length", featuresList.length);
-    	intent.putExtra("featuresList[0].length", featuresList[0].length);
+    	intent.putExtra("featuresList", featuresList);
     	intent.putExtra("sendTo", sendTo);
-    	
-    	for(int i = 0; i < featuresList.length; i++){
-    		intent.putExtra("featuresList["+i+"]", featuresList[i]);
-    	}
     	
     	startService(intent);
     }
@@ -179,11 +174,12 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
      * this is usefull if we pretend to accumulate
      * a list of svm prediction requests making it more 
      * efficient but with a delay given by the size of this "prediction buffer".
+     * With probability only one feature list is suported.
      * @param features
      */
     private void addFeatures(String sendTo, float[] features){
     	// TODO send more than one feature array per prediction (more efficient)
-    	requestStatePrediction(sendTo, new float[][]{features});
+    	requestStatePrediction(sendTo, features);
     }
     
     /**
@@ -193,10 +189,11 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     	bicycleActivityReceiver = new BroadcastReceiver() {
 		    @Override
 		    public void onReceive(Context context, Intent intent) {
-		    	int[] statesPredicted = intent.getIntArrayExtra("statesPredicted");
-		    	double[] predictionsProbabilities = intent.getDoubleArrayExtra("predictionsProbabilities");
 		    	
-		    	processPrediction(statesPredicted, predictionsProbabilities);
+		    	int statePredicted = intent.getIntExtra("statePredicted",1);// TODO: default
+		    	double[] classesProbabilities = intent.getDoubleArrayExtra("classesProbabilities");
+		    	
+		    	processPrediction(statePredicted, classesProbabilities);
 		    }
 		};
 		 
@@ -208,10 +205,10 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 		carActivityReceiver = new BroadcastReceiver() {
 		    @Override
 		    public void onReceive(Context context, Intent intent) {
-		    	int[] statesPredicted = intent.getIntArrayExtra("statesPredicted");
-		    	double[] predictionsProbabilities = intent.getDoubleArrayExtra("predictionsProbabilities");
+		    	int statePredicted = intent.getIntExtra("statePredicted",1);// TODO: default
+		    	double[] classesProbabilities = intent.getDoubleArrayExtra("classesProbabilities");
 		    	
-		    	processPrediction(statesPredicted, predictionsProbabilities);
+		    	processPrediction(statePredicted, classesProbabilities);
 		    }
 		};
 		 
@@ -231,17 +228,17 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
      * @param statesPredicted
      * @param predictionsProbabilities
      */
-    private void processPrediction(int[] statesPredicted, double[] predictionsProbabilities){
+    private void processPrediction(int statePredicted, double[] classesProbabilities){
     	//TODO
-    	updateUserStateDisplay(stateToString(statesPredicted[0]), predictionsProbabilities[0]);
+    	updateUserStateDisplay(stateToString(statePredicted), classesProbabilities[0]);//TODO get max probability
     	
     	// TODO IMPORTANT!!! update prevState and prevStateProbability wisely
     	
-    	if(predictionsProbabilities[0] < 0)
-    		Log.e(TAG, "predictionsProbabilities[0] < 0");
+    	if(classesProbabilities[0] < 0)
+    		Log.e(TAG, "classesProbabilities[0] < 0");
     	// TODO: decide prevState by prevStateProbability
-    	prevState = statesPredicted[0];
-    	prevStateProbability = (float) predictionsProbabilities[0];
+    	prevState = statePredicted;
+    	prevStateProbability = (float) classesProbabilities[0];
     }
     
     private String stateToString(int state){

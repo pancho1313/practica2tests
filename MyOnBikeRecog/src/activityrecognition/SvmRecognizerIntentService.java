@@ -4,7 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 
 public class SvmRecognizerIntentService extends IntentService {
-	
+	public static final int NUMBER_OF_LABELS = 4;
 	public static final int NOT_MOVING = 1; // Must be >0
 	public static final int CRUISE = 2; // Must be >0
 	public static final int ACCELERATING = 3; // Must be >0
@@ -28,27 +28,22 @@ public class SvmRecognizerIntentService extends IntentService {
 			float[] featuresMax){
 		// get list of features to predict
 		String sendTo = intent.getStringExtra("sendTo");
-		int featuresListLength = intent.getIntExtra("featuresList.length", 0);
-		int featuresLength = intent.getIntExtra("featuresList[0].length", 0);
-		float[][] featuresList = new float[featuresListLength][featuresLength];
+		float[] featuresList = intent.getFloatArrayExtra("featuresList");
 		
-		for(int i = 0; i < featuresListLength; i++){
-			featuresList[i] = intent.getFloatArrayExtra("featuresList["+i+"]");
-		}
 		
 		// predict
-		int[] statesPredicted = new int[featuresListLength];
-		double[] predictionsProbabilities = new double[featuresListLength];
+		int[] statesPredicted = new int[1];
+		double[] predictionsProbabilities = new double[NUMBER_OF_LABELS];
 		SvmRecognizer svmRecognizer = new SvmRecognizer(scaleH, scaleL, featuresMin, featuresMax);
 		if(svmRecognizer.predict(featuresList, modelFile, statesPredicted, predictionsProbabilities)){
 			sendPrediction(sendTo, statesPredicted, predictionsProbabilities);
 		}
 	}
 	
-	private void sendPrediction(String sendTo, int[] statesPredicted, double[] predictionsProbabilities){
+	private void sendPrediction(String sendTo, int[] statesPredicted, double[] classesProbabilities){
 		Intent i = new Intent(sendTo);
-		i.putExtra("statesPredicted", statesPredicted);
-		i.putExtra("predictionsProbabilities", predictionsProbabilities);
+		i.putExtra("statePredicted", statesPredicted[0]);
+		i.putExtra("classesProbabilities", classesProbabilities);
 		sendBroadcast(i);
 	}
 }

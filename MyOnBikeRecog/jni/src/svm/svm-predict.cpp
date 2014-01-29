@@ -53,8 +53,8 @@ int predict(float **values, int **indices, int rowNum, int colNum, int *labels, 
 			LOGD("Prob. model for test data: target value = predicted value + z,\nz: Laplace distribution e^(-|z|/sigma)/(2sigma),sigma=%g\n",svm_get_svr_probability(model));
 		else
 		{
-			int *labels=(int *) malloc(nr_class*sizeof(int));
-			svm_get_labels(model,labels);
+			//int *labels=(int *) malloc(nr_class*sizeof(int));
+			//svm_get_labels(model,labels);
 		//	fprintf(output,"labels");		
 		//	for(j=0;j<nr_class;j++)
 		//		fprintf(output," %d",labels[j]);
