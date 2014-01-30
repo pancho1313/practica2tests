@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="com.kpbird.myactivityrecognition.R.id"/>
 <fullyQualifiedTypeName name="com.kpbird.myactivityrecognition.R.string"/>
 <fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="java.io.FileOutputStream"/>
 <fullyQualifiedTypeName name="java.io.PrintWriter"/>
-<fullyQualifiedTypeName name="java.io.FileNotFoundException"/>
 <fullyQualifiedTypeName name="android.hardware.SensorEvent"/>
 <fullyQualifiedTypeName name="android.content.pm.PackageManager"/>
 <fullyQualifiedTypeName name="android.widget.Button"/>
@@ -25,30 +23,22 @@
 <fullyQualifiedTypeName name="android.view.View"/>
 <fullyQualifiedTypeName name="android.R.color"/>
 <fullyQualifiedTypeName name="android.graphics.Color"/>
-<fullyQualifiedTypeName name="java.io.IOException"/>
-<fullyQualifiedTypeName name="java.io.BufferedReader"/>
-<fullyQualifiedTypeName name="java.io.FileReader"/>
-<fullyQualifiedTypeName name="java.util.StringTokenizer"/>
 <fullyQualifiedTypeName name="android.text.format.Formatter"/>
 <fullyQualifiedTypeName name="android.widget.LinearLayout"/>
 <fullyQualifiedTypeName name="myutil.AssetsPropertyReader"/>
-<fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="java.util.Properties"/>
 <fullyQualifiedTypeName name="android.widget.Toast"/>
 <fullyQualifiedTypeName name="com.example.activityregistrator.R.id"/>
 <fullyQualifiedTypeName name="java.util.Enumeration"/>
 <fullyQualifiedTypeName name="features.MyFeatures"/>
 <fullyQualifiedTypeName name="com.example.activityregistrator.ActivityRegistrator"/>
-<fullyQualifiedTypeName name="features.MyFeatures4"/>
 <fullyQualifiedTypeName name="java.util.Scanner"/>
 <fullyQualifiedTypeName name="windowdata.WindowHalfOverlap"/>
 <fullyQualifiedTypeName name="android.R"/>
 <fullyQualifiedTypeName name="android.os.Environment"/>
 <fullyQualifiedTypeName name="activityrecognition.SvmBicycleRecognizerIntentService"/>
 <fullyQualifiedTypeName name="features.MyFeatures1"/>
-<fullyQualifiedTypeName name="myutil.MyUtil"/>
 <fullyQualifiedTypeName name="activityrecognition.SvmRecognizerIntentServiceInterface"/>
-<fullyQualifiedTypeName name="com.example.myfeatureextraction.R.id"/>
 <fullyQualifiedTypeName name="android.widget.TextView"/>
 <fullyQualifiedTypeName name="windowdata.IWindowData"/>
 <fullyQualifiedTypeName name="features.IFeatures"/>
@@ -60,4 +50,14 @@
 <fullyQualifiedTypeName name="libsvm.svm_problem"/>
 <fullyQualifiedTypeName name="features.MyFeatures3"/>
 <fullyQualifiedTypeName name="features.MyFeatures2"/>
+<fullyQualifiedTypeName name="java.io.IOException"/>
+<fullyQualifiedTypeName name="java.io.BufferedReader"/>
+<fullyQualifiedTypeName name="java.io.FileReader"/>
+<fullyQualifiedTypeName name="java.io.FileNotFoundException"/>
+<fullyQualifiedTypeName name="java.util.StringTokenizer"/>
+<fullyQualifiedTypeName name="features.MyFeatures4"/>
+<fullyQualifiedTypeName name="android.content.Context"/>
+<fullyQualifiedTypeName name="myutil.MyUtil"/>
+<fullyQualifiedTypeName name="android.view.MenuItem"/>
+<fullyQualifiedTypeName name="com.example.myfeatureextraction.R.id"/>
 </qualifiedTypeNameHistroy>

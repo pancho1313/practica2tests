@@ -209,3 +209,19 @@ testCar.128.4.txt (ready)
     trainingData_17.128.4.txt
     trainingData_6.128.4.txt
     trainingData_9.128.4.txt
+
+------------------------------
+BIKE & CAR
+------------------------------
+
+trainingBC.64.1.txt
+    trainingBike.64.1.txt
+    trainingCar.64.1.txt
+
+testBC.64.1.txt
+    testBike.64.1.txt
+    testCar.64.1.txt
+    
+.
+.
+.

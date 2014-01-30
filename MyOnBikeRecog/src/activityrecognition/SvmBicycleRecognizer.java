@@ -18,7 +18,7 @@ public class SvmBicycleRecognizer {
 	public SvmBicycleRecognizer(){}
 	
 	public void predictState(Intent intent, SvmRecognizerIntentService svmRecognizerIntentService) {
-		String modelFile = Environment.getExternalStorageDirectory() + "/trainingBike.64.1.txt.model.noprob";
+		String modelFile = Environment.getExternalStorageDirectory() + "/trainingBike.64.1.txt.model";
 		
 		//libsvm scale ranges
 		float scaleH = 1f;
