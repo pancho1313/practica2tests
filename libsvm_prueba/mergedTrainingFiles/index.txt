@@ -28,13 +28,13 @@ testBike.128.1.txt (ready)
 
 ------------------------------
 
-trainingBike.64.2.txt
+trainingBike.64.2.txt (ready)
     trainingData_13.64.2.txt
     trainingData_14.64.2.txt
     trainingData_15.64.2.txt
     trainingData_16.64.2.txt
 
-testBike.64.2.txt
+testBike.64.2.txt (ready)
     trainingData_5.64.2.txt
     trainingData_8.64.2.txt
     trainingData_11.64.2.txt
@@ -76,26 +76,26 @@ testBike.128.3.txt (ready)
 
 ------------------------------
 
-trainingBike.64.4.txt
+trainingBike.64.4.txt (ready)
     trainingData_13.64.4.txt
     trainingData_14.64.4.txt
     trainingData_15.64.4.txt
     trainingData_16.64.4.txt
 
-testBike.64.4.txt
+testBike.64.4.txt (ready)
     trainingData_5.64.4.txt
     trainingData_8.64.4.txt
     trainingData_11.64.4.txt
 
 ------------------------------
 
-trainingBike.128.4.txt
+trainingBike.128.4.txt (ready)
     trainingData_13.128.4.txt
     trainingData_14.128.4.txt
     trainingData_15.128.4.txt
     trainingData_16.128.4.txt
 
-testBike.128.4.txt
+testBike.128.4.txt (ready)
     trainingData_5.128.4.txt
     trainingData_8.128.4.txt
     trainingData_11.128.4.txt
@@ -134,13 +134,13 @@ testCar.128.1.txt (ready)
 
 ------------------------------
 
-trainingCar.64.2.txt
+trainingCar.64.2.txt (ready)
     trainingData_12.64.2.txt
     trainingData_4.64.2.txt
     trainingData_7.64.2.txt
     trainingData_10.64.2.txt
 
-testCar.64.2.txt
+testCar.64.2.txt (ready)
     trainingData_17.64.2.txt
     trainingData_6.64.2.txt
     trainingData_9.64.2.txt
@@ -186,26 +186,26 @@ testCar.128.3.txt (ready)
 
 ------------------------------
 
-trainingCar.64.4.txt
+trainingCar.64.4.txt (ready)
     trainingData_12.64.4.txt
     trainingData_4.64.4.txt
     trainingData_7.64.4.txt
     trainingData_10.64.4.txt
 
-testCar.64.4.txt
+testCar.64.4.txt (ready)
     trainingData_17.64.4.txt
     trainingData_6.64.4.txt
     trainingData_9.64.4.txt
 
 ------------------------------
 
-trainingCar.128.4.txt
+trainingCar.128.4.txt (ready)
     trainingData_12.128.4.txt
     trainingData_4.128.4.txt
     trainingData_7.128.4.txt
     trainingData_10.128.4.txt
 
-testCar.128.4.txt
+testCar.128.4.txt (ready)
     trainingData_17.128.4.txt
     trainingData_6.128.4.txt
     trainingData_9.128.4.txt
