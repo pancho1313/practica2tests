@@ -43,10 +43,14 @@ public class SvmRecognizerIntentService extends IntentService {
 		
 		
 		// predict
-		int[] statePredicted = new int[1];
+		int[] statePredicted = new int[NUMBER_OF_LABELS];
 		double[] predictionsProbabilities = new double[NUMBER_OF_LABELS];
 		SvmRecognizer svmRecognizer = new SvmRecognizer(scaleH, scaleL, featuresMin, featuresMax);
 		if(svmRecognizer.predict(features, modelFile, statePredicted, predictionsProbabilities)){
+			String s = "";
+			for(int i : statePredicted)
+				s += i+"";
+			Log.d(TAG, "labels: "+s);
 			sendPrediction(sendTo, statePredicted[0], predictionsProbabilities);
 		}
 	}

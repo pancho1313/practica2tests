@@ -54,19 +54,31 @@ public class SvmRecognizer implements IActivityRecognizer {
     ////////////////////////////////////////////////////////////////////////////
     public boolean predict(float[] features, String modelFile, int label[], double probs[]){
     	//Log.d(TAG,"predict");
-    	int isProb = 1;// 0 or 1 (default 0)
+    	int isProb = 0;// 0 or 1 (default 0)
     	int[] indices = new int[features.length];
 
-    	
+    	String s ="f: ";
 		for(int j = 0; j < indices.length; j++){
-			indices[j] = j+1;
+			s+= " "+features[j];
 		}
+		Log.d(TAG,s);
     	
     	scaleFeatures(features);
     	
+    	s ="s: ";
+		for(int j = 0; j < indices.length; j++){
+			indices[j] = j+1;
+			s+= " "+features[j];
+		}
+		Log.d(TAG,s);
+    	
+    	
+    	//3 1:-0.437557 2:-0.232903 3:-0.773791 4:-0.448366
+		//if(doClassificationNative(new float[][]{new float[]{-0.437557f, -0.232903f, -0.773791f, -0.448366f}}, new int[][]{indices}, isProb, modelFile, label, probs) != 0){
     	if(doClassificationNative(new float[][]{features}, new int[][]{indices}, isProb, modelFile, label, probs) != 0){
     		return false;
     	}else{
+    		Log.d(TAG,"predicted state: "+label[0]);
     		return true;
     	}
     }

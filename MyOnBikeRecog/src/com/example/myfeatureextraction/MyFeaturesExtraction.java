@@ -126,6 +126,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 	    		
 	    	}
 	    	
+	    	/*
 	    	if(windowDataCar.addData(getDataForWindowData(linearAccel, myFeaturesCar.getFeaturesType()))){
 	    		// we have a complete windowData
 	    		
@@ -135,7 +136,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 	    		// report new array of features
 	    		addFeatures(sendToCarSVM, features);
 	    	}
-	    	
+	    	*/
     	}
     	
     	if (event.sensor.getType() == Sensor.TYPE_GRAVITY)
@@ -218,8 +219,12 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
      */
     private void processPrediction(String from, Intent intent){
     	
-    	int statePredicted = intent.getIntExtra("statePredicted",1);// TODO: default
+    	int statePredicted = intent.getIntExtra("statePredicted",-1);
     	double stateProbability = intent.getDoubleExtra("stateProbability", -1);
+    	
+    	if(statePredicted == -1){
+    		Log.d(TAG, "statePredicted == -1");
+    	}
     	
     	String id = "___";
     	if(from.equals(sendToBicycleSVM))

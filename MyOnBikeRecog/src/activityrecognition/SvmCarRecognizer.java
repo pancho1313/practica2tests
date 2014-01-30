@@ -2,6 +2,7 @@ package activityrecognition;
 
 import features.IFeatures;
 import features.MyFeatures1;
+import features.MyFeatures3;
 import windowdata.IWindowData;
 import windowdata.WindowHalfOverlap;
 import android.app.IntentService;
@@ -10,8 +11,8 @@ import android.os.Environment;
 import android.util.Log;
 
 public class SvmCarRecognizer {
-	private static final int wSize = 64;
-	private static final int floatsPerWindowData = MyFeatures1.FLOATS_PER_WINDOW_DATA;
+	private static final int wSize = 128;
+	private static final int floatsPerWindowData = MyFeatures3.FLOATS_PER_WINDOW_DATA;
 	
 	public SvmCarRecognizer(){}
 	
@@ -51,6 +52,6 @@ public class SvmCarRecognizer {
 	}
 	
 	public static IFeatures getMyFeatures(){
-		return new MyFeatures1();
+		return new MyFeatures3();
 	}
 }
