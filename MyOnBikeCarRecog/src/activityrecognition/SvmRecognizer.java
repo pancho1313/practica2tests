@@ -61,7 +61,7 @@ public class SvmRecognizer implements IActivityRecognizer {
 		for(int j = 0; j < indices.length; j++){
 			s+= " "+features[j];
 		}
-		Log.d(TAG,s);
+		//Log.d(TAG,s);
     	
     	scaleFeatures(features);
     	
@@ -70,7 +70,7 @@ public class SvmRecognizer implements IActivityRecognizer {
 			indices[j] = j+1;
 			s+= " "+features[j];
 		}
-		Log.d(TAG,s);
+		//Log.d(TAG,s);
     	
     	
     	//3 1:-0.437557 2:-0.232903 3:-0.773791 4:-0.448366
@@ -78,7 +78,12 @@ public class SvmRecognizer implements IActivityRecognizer {
     	if(doClassificationNative(new float[][]{features}, new int[][]{indices}, isProb, modelFile, label, probs) != 0){
     		return false;
     	}else{
-    		Log.d(TAG,"predicted state: "+label[0]);
+    		Log.d(TAG,"predicted state: "+label[0]+"--------------------");
+    		String[] sp = {"11", "13", "12", "14", "22", "23", "24", "21"};
+    		for(int i  = 0; i < probs.length; i++){
+    			Log.d(TAG,""+sp[i]+"="+probs[i]);
+    		}
+    		
     		return true;
     	}
     }

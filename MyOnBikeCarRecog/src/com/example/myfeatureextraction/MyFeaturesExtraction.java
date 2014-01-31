@@ -1,6 +1,8 @@
 package com.example.myfeatureextraction;
 
 
+import java.util.Arrays;
+
 import myutil.MyUtil;
 import features.IFeatures;
 import features.MyFeatures1;
@@ -8,6 +10,7 @@ import features.MyFeatures2;
 import features.MyFeatures3;
 import features.MyFeatures4;
 import windowdata.IWindowData;
+import windowdata.WindowHalfOverlap;
 import activityrecognition.SvmBicycleCarRecognizer;
 import activityrecognition.SvmRecognizerIntentService;
 import android.hardware.Sensor;
@@ -35,6 +38,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     private float[] gData;
     private float prevState;
     private float prevStateProbability;
+    private WindowHalfOverlap statesProbsWindow;
     
     public static final String sendToBicycleCarSVM = "com.example.myfeatureextraction.BICYCLE_CAR_PREDICTION";
     
@@ -61,6 +65,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 		
 		gData = new float[3];
 		prevState = prevStateProbability = 0f;
+		statesProbsWindow = new WindowHalfOverlap(4, 2);
 		
 		textView = "";
 		playSound = false;
@@ -210,10 +215,6 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     	}
 
     	
-    	// TODO IMPORTANT!!! update prevState and prevStateProbability wisely
-    	
-
-    	// TODO: decide prevState by prevStateProbability
     	if(dualNM && ((statePredicted==SvmRecognizerIntentService.BIKE_NOT_MOVING) || (statePredicted==SvmRecognizerIntentService.CAR_NOT_MOVING)))
     		prevState = -1f;
     	else
@@ -225,7 +226,55 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     		Log.d(TAG, "prevStateProbabilityMode="+prevState+" ("+((int)prevState)+" "+(prevState-(int)prevState)+")");
     	}
     	
+    	if(statesProbsWindow.addData(new float[]{statePredicted, prevStateProbability})){
+    		int mostProbableState = getMostProbableState(statesProbsWindow.getData(0), statesProbsWindow.getData(1));
+    		Toast.makeText(this, "mostProbableState: "+stateToString(mostProbableState), Toast.LENGTH_SHORT).show();
+    	}
+    	
     	updateUserStateDisplay(stateToString(statePredicted), prevStateProbability);//TODO get max probability
+    }
+    
+    private int getMostProbableState(float[] states, float[] probs){
+    	String TAG = "getMostProbableState";
+    	int[] STATES = {
+    			SvmRecognizerIntentService.BIKE_NOT_MOVING,
+    			SvmRecognizerIntentService.BIKE_CRUISE,
+    			SvmRecognizerIntentService.BIKE_ACCELERATING,
+    			SvmRecognizerIntentService.BIKE_BREAKING,
+    			
+    			SvmRecognizerIntentService.CAR_NOT_MOVING,
+    			SvmRecognizerIntentService.CAR_CRUISE,
+    			SvmRecognizerIntentService.CAR_ACCELERATING,
+    			SvmRecognizerIntentService.CAR_BREAKING,
+    	};
+    	
+    	float[] STATESprob = new float[STATES.length];
+    	Log.d(TAG, "-------------------");
+    	for(int i = 0; i < states.length; i++){
+    		Log.d(TAG,"(int)(states[i])="+(int)(states[i]));
+    		//int index = Arrays.asList(STATES).indexOf((int)(states[i]));
+    		int index = 0;
+    		for(int j = 0; j < STATES.length; j++){
+    			if((int)(states[i]) == STATES[j]){
+    				index = j;
+    				break;
+    			}
+    		}
+    		
+    		Log.d(TAG,"index="+index);
+    		if(index>=0 && index<STATESprob.length){
+    			STATESprob[index] += probs[i];
+    			Log.d(TAG, "getMostProbableState"+stateToString(index));
+    		}
+    	}
+    	
+    	int maxIndex = 0;
+    	for(int i = 1; i < STATESprob.length; i++){
+    		if(STATESprob[i] > STATESprob[maxIndex])
+    			maxIndex = i;
+    	}
+    	
+    	return STATES[maxIndex];
     }
     
     private String stateToString(int state){

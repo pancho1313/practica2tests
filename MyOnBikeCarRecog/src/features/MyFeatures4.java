@@ -2,6 +2,7 @@ package features;
 
 import myutil.MyUtil;
 import activityrecognition.SvmRecognizerIntentService;
+import android.util.Log;
 
 
 import windowdata.IWindowData;

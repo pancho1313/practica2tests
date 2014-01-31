@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.kpbird.myactivityrecognition.R.id"/>
 <fullyQualifiedTypeName name="com.kpbird.myactivityrecognition.R.string"/>
 <fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="java.io.FileOutputStream"/>
@@ -33,7 +32,6 @@
 <fullyQualifiedTypeName name="features.MyFeatures"/>
 <fullyQualifiedTypeName name="com.example.activityregistrator.ActivityRegistrator"/>
 <fullyQualifiedTypeName name="java.util.Scanner"/>
-<fullyQualifiedTypeName name="windowdata.WindowHalfOverlap"/>
 <fullyQualifiedTypeName name="android.R"/>
 <fullyQualifiedTypeName name="android.os.Environment"/>
 <fullyQualifiedTypeName name="activityrecognition.SvmBicycleRecognizerIntentService"/>
@@ -45,7 +43,6 @@
 <fullyQualifiedTypeName name="activityrecognition.SvmCarRecognizerIntentService"/>
 <fullyQualifiedTypeName name="com.example.myfeatureextraction.MyFeaturesExtraction"/>
 <fullyQualifiedTypeName name="activityrecognition.SvmRecognizerIntentService"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="libsvm.svm"/>
 <fullyQualifiedTypeName name="libsvm.svm_problem"/>
 <fullyQualifiedTypeName name="features.MyFeatures3"/>
@@ -60,4 +57,7 @@
 <fullyQualifiedTypeName name="myutil.MyUtil"/>
 <fullyQualifiedTypeName name="android.view.MenuItem"/>
 <fullyQualifiedTypeName name="com.example.myfeatureextraction.R.id"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="windowdata.WindowHalfOverlap"/>
+<fullyQualifiedTypeName name="java.util.Arrays"/>
 </qualifiedTypeNameHistroy>

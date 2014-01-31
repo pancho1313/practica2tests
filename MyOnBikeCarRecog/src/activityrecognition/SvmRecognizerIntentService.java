@@ -49,7 +49,7 @@ public class SvmRecognizerIntentService extends IntentService {
 			String s = "";
 			for(int i : statePredicted)
 				s += i+"";
-			Log.d(TAG, "labels: "+s);
+			//Log.d(TAG, "labels: "+s);
 			sendPrediction(sendTo, statePredicted[0], predictionsProbabilities);
 		}
 	}
