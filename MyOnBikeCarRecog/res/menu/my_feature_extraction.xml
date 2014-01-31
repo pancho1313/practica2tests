@@ -5,10 +5,15 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/sound"/>
-    <item
+    <item 
         android:id="@+id/dualNM"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/dualNM"/>
+    <item 
+        android:id="@+id/prevStateProbabilityMode"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/prevStateProbabilityMode"/>
 
 </menu>

@@ -47,8 +47,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     private BroadcastReceiver receiver;
     
     private String textView;
-    private boolean playSound;
-    private boolean dualNM;
+    private boolean playSound, dualNM, prevStateProbabilityMode;
  	
     private void init(){
     	mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
@@ -66,6 +65,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 		textView = "";
 		playSound = false;
 		dualNM = false;
+		prevStateProbabilityMode = false;
     }
     
 	@Override
@@ -94,6 +94,9 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 		}else if(item.getItemId() == R.id.dualNM){
 			dualNM = !dualNM;
 			Toast.makeText(this, "dualNM: "+dualNM, Toast.LENGTH_SHORT).show();
+		} else if(item.getItemId() == R.id.prevStateProbabilityMode){
+			prevStateProbabilityMode = !prevStateProbabilityMode;
+			Toast.makeText(this, "prevStateProbabilityMode: "+prevStateProbabilityMode, Toast.LENGTH_SHORT).show();
 		}
 		return true;
 	}
@@ -110,6 +113,8 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
         mSensorManager.registerListener(this, gSensor, sensorDelay);
         
         refreshTextView();
+        
+        Log.d(TAG, "prevState="+3.43+" (int)="+(int)3.43);
     }
 
     protected void onPause() {
@@ -199,6 +204,9 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     	int statePredicted = intent.getIntExtra("statePredicted",-1);
     	double stateProbability = intent.getDoubleExtra("stateProbability", -1);
     	
+    	if(stateProbability >= 1.0)
+    		stateProbability = 0.99;
+    	
     	if(statePredicted == -1){
     		Log.d(TAG, "statePredicted == -1");
     	}
@@ -212,7 +220,12 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     		prevState = -1f;
     	else
     		prevState = statePredicted;
-    	prevStateProbability = (statePredicted>0) ? (float) stateProbability : -1f;
+    	prevStateProbability = (statePredicted>0) ? (float) stateProbability : -0.5f;
+    	
+    	if(prevStateProbabilityMode && prevStateProbability < 1){
+    		prevState += prevStateProbability;
+    		Log.d(TAG, "prevStateProbabilityMode="+prevState+" ("+((int)prevState)+" "+(prevState-(int)prevState)+")");
+    	}
     	
     	updateUserStateDisplay(stateToString(statePredicted), prevStateProbability);//TODO get max probability
     }

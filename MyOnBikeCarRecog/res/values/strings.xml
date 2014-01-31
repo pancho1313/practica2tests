@@ -6,4 +6,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="sound">sound?</string>
     <string name="dualNM">dualNM?</string>
+    <string name="prevStateProbabilityMode">prevStateProbabilityMode?</string>
 </resources>
