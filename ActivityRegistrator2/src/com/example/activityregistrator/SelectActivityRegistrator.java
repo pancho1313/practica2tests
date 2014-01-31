@@ -19,6 +19,12 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * activity to select between ActivityMarker, ActivityRegistrator and TrainingFileGenerator,
+ * it also show windowData size and type of features used in TrainingFileGenerator
+ * @author fhafon
+ *
+ */
 public class SelectActivityRegistrator extends Activity {
 
     private Properties properties;
@@ -69,57 +75,5 @@ public class SelectActivityRegistrator extends Activity {
        	 propertiesList += "\n" +str + ": " + properties.get(str);
         }
         ((TextView)findViewById(R.id.properties)).setText(propertiesList);
-	}
-	
-	private void scaleFeatures(float[] features){
-		String TAG = "scaleFeatures";
-		Log.d(TAG, "[ 1.2627743 6.3329363 247.03587 407.84216 ] (input)");
-		features = new float[]{1.2627743f, 6.3329363f, 247.03587f, 407.84216f};
-		
-		///////////////////////////////read from .properties
-		float scaleH = 1;
-		float scaleL = -1;
-
-		float[] featuresMax = new float[features.length];
-		float[] featuresMin = new float[features.length];
-		/*
-		1 0.7140552 5.150639
-		2 0.66037196 16.077961
-		3 64.83476 3977.108
-		4 255.21948 1688.7849
-		*/
-		featuresMin[0] = 0.7140552f;
-		featuresMin[1] = 0.66037196f;
-		featuresMin[2] = 64.83476f;
-		featuresMin[3] = 255.21948f;
-		
-		featuresMax[0] = 5.150639f;
-		featuresMax[1] = 16.077961f;
-		featuresMax[2] = 3977.108f;
-		featuresMax[3] = 1688.7849f;
-		
-		///////////////precalculate data
-		float scaleZero = (scaleH + scaleL)/2;
-		float scaleDif = scaleH - scaleL;
-		float[] featuresZero = new float[features.length];
-		float[] featuresDif = new float[features.length];
-		for(int i = 0; i < features.length; i++){
-			featuresZero[i] = (featuresMax[i] + featuresMin[i])/2;
-			featuresDif[i] = featuresMax[i] - featuresMin[i];
-		}
-		
-		////////////////runtime calculation
-		for(int i = 0; i < features.length; i++){
-			features[i] = scaleZero + ((features[i] - featuresZero[i]) * scaleDif)/featuresDif[i];
-		}
-		
-		////////////////
-		String s = "[ ";
-		for(float f : features){
-			s+= f+" ";
-		}
-		s+="] (your scale)";
-		Log.d(TAG, s);
-		Log.d(TAG, "[ -0.752639 -0.264144 -0.906857 -0.787073 ] (libsvm.scale)");
 	}
 }

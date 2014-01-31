@@ -24,8 +24,6 @@
 <fullyQualifiedTypeName name="android.graphics.Color"/>
 <fullyQualifiedTypeName name="android.text.format.Formatter"/>
 <fullyQualifiedTypeName name="android.widget.LinearLayout"/>
-<fullyQualifiedTypeName name="myutil.AssetsPropertyReader"/>
-<fullyQualifiedTypeName name="java.util.Properties"/>
 <fullyQualifiedTypeName name="android.widget.Toast"/>
 <fullyQualifiedTypeName name="com.example.activityregistrator.R.id"/>
 <fullyQualifiedTypeName name="java.util.Enumeration"/>
@@ -53,11 +51,13 @@
 <fullyQualifiedTypeName name="java.io.FileNotFoundException"/>
 <fullyQualifiedTypeName name="java.util.StringTokenizer"/>
 <fullyQualifiedTypeName name="features.MyFeatures4"/>
-<fullyQualifiedTypeName name="android.content.Context"/>
 <fullyQualifiedTypeName name="myutil.MyUtil"/>
 <fullyQualifiedTypeName name="android.view.MenuItem"/>
 <fullyQualifiedTypeName name="com.example.myfeatureextraction.R.id"/>
 <fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="windowdata.WindowHalfOverlap"/>
 <fullyQualifiedTypeName name="java.util.Arrays"/>
+<fullyQualifiedTypeName name="java.util.Properties"/>
+<fullyQualifiedTypeName name="myutil.AssetsPropertyReader"/>
+<fullyQualifiedTypeName name="android.content.Context"/>
 </qualifiedTypeNameHistroy>

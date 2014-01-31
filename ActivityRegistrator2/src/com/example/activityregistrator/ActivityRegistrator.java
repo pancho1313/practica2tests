@@ -11,6 +11,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * activity used to initiate LinearAccelerationService 
+ * @author fhafon
+ *
+ */
 public class ActivityRegistrator extends Activity {
 	public static final String TAG = "ActivityRegistrator";
 	
