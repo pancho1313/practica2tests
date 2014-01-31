@@ -1,7 +1,6 @@
 package com.example.myfeatureextraction;
 
 
-import java.util.Arrays;
 
 import myutil.MyUtil;
 import features.IFeatures;
@@ -29,7 +28,12 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
-
+/**
+ * This class obtains sensor data and sends it to SvmRecognizer.
+ * Receives the state prediction from SvmRecognizerIntentService and process it to display the detected activity to user. 
+ * @author fhafon
+ *
+ */
 public class MyFeaturesExtraction extends Activity implements SensorEventListener {
 
 	private String TAG = "MyFeaturesExtraction";
@@ -40,37 +44,49 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     private float prevStateProbability;
     private WindowHalfOverlap statesProbsWindow;
     
+    // global message identifier used to comunicate svm predictions
     public static final String sendToBicycleCarSVM = "com.example.myfeatureextraction.BICYCLE_CAR_PREDICTION";
     
+    // set sensor type and delay
     private final int sensorType = Sensor.TYPE_LINEAR_ACCELERATION;
     private int sensorDelay = SensorManager.SENSOR_DELAY_FASTEST;
-
+    
     private IWindowData windowData;
     private IFeatures myFeatures;
     
+    // receives the state/activity prediction from SvmRecognizerIntentService
     private BroadcastReceiver receiver;
     
     private String textView;
     private boolean playSound, dualNM, prevStateProbabilityMode;
  	
     private void init(){
+    	
     	mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(sensorType);
         gSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
     	
+        // to store the sensor data
     	windowData = SvmBicycleCarRecognizer.getNewWindowData();
 		myFeatures = SvmBicycleCarRecognizer.getMyFeatures();
 		
 		initRecievers();
 		
-		gData = new float[3];
+		gData = new float[3]; // vector with gravity sensor data
 		prevState = prevStateProbability = 0f;
-		statesProbsWindow = new WindowHalfOverlap(4, 2);
 		
+		// this window acumulates the last state predictions for better activity aproximation
+		int statesProbsWindowSize = 4; // use the last 4 state predictions
+		int floatsPerWindowData = 2; // state predicted and its probability
+		statesProbsWindow = new WindowHalfOverlap(statesProbsWindowSize, floatsPerWindowData);
+		
+		// user display
 		textView = "";
-		playSound = false;
-		dualNM = false;
-		prevStateProbabilityMode = false;
+		
+		// menu settings
+		playSound = false; // alert the predicted activity
+		dualNM = false; // explained on README
+		prevStateProbabilityMode = false; // explained on README 
     }
     
 	@Override
@@ -116,7 +132,6 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
         super.onResume();
         mSensorManager.registerListener(this, mSensor, sensorDelay);
         mSensorManager.registerListener(this, gSensor, sensorDelay);
-        
         refreshTextView();
     }
 
@@ -127,21 +142,24 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
+    /**
+     * here we recieve an preprocess the sensors (linnear acc. and gravity) data
+     */
     public void onSensorChanged(SensorEvent event) {
     	
     	if (event.sensor.getType() == sensorType){
 	    	// get gravity and linear acceleration
 	    	float[] linearAccel = event.values.clone();
 	    	
+	    	// add linnear acc. data to the window data
 	    	if(windowData.addData(getDataForWindowData(linearAccel, myFeatures.getFeaturesType()))){
-	    		// we have a complete windowData
+	    		// complete windowData, we have to calculate the features 
 	    		
 	    		// calculate features
 	    		float [] features = myFeatures.getFeatures(windowData);
 	    		
-	    		// report new array of features
+	    		// report new array of features for svm prediction
 	    		requestStatePrediction(sendToBicycleCarSVM, features);
-	    		
 	    	}
     	}
     	
@@ -149,6 +167,11 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     		gData = event.values.clone();
     }
     
+    /**
+     * show predicted state and its probability on user's screen
+     * @param statePredicted
+     * @param predictionProbability
+     */
     private void updateUserStateDisplay(String statePredicted, float predictionProbability){
     	String s = statePredicted + " " + predictionProbability + "\n";
     	textView = s + textView;
@@ -160,7 +183,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     }
     
     /**
-     * performs a states (may be more than one prediction) prediction request
+     * performs a state prediction request sending features vector to SvmRecognizerIntentService
      * @param features
      */
     private void requestStatePrediction(String sendTo, float[] features){
@@ -172,7 +195,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     
     
     /**
-     * here we receive predictions made before
+     * here we receive and process state predictions
      */
     private void initRecievers(){
     	receiver = new BroadcastReceiver() {
@@ -192,43 +215,49 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     }
     
     /**
-     * here we can decide what to do with the prediction result
+     * here we can decide what to do with the prediction result,
+     * 
      * 
      * @param statePredicted
      * @param classesProbabilities
      */
     private void processPrediction(String from, Intent intent){
-    	
+    	// get state predicted and its probability
     	int statePredicted = intent.getIntExtra("statePredicted",-1);
     	double stateProbability = intent.getDoubleExtra("stateProbability", -1);
     	
+    	// necesary condition to support prevStateProbabilityMode (on README)
     	if(stateProbability >= 1.0)
     		stateProbability = 0.99;
-    	
-    	if(statePredicted == -1){
-    		Log.d(TAG, "statePredicted == -1");
-    	}
 
-    	
+    	// set BIKE_NOT_MOVING and CAR_NOT_MOVING as the same state
     	if(dualNM && ((statePredicted==SvmRecognizerIntentService.BIKE_NOT_MOVING) || (statePredicted==SvmRecognizerIntentService.CAR_NOT_MOVING)))
     		prevState = -1f;
     	else
     		prevState = statePredicted;
     	prevStateProbability = (statePredicted>0) ? (float) stateProbability : -0.5f;
     	
+    	// include the probability of the predicted state to the vector of features
     	if(prevStateProbabilityMode && prevStateProbability < 1){
     		prevState += prevStateProbability;
     		Log.d(TAG, "prevStateProbabilityMode="+prevState+" ("+((int)prevState)+" "+(prevState-(int)prevState)+")");
     	}
     	
+    	// show an user activity calculated with previous state predictions
     	if(statesProbsWindow.addData(new float[]{statePredicted, prevStateProbability})){
     		int mostProbableState = getMostProbableState(statesProbsWindow.getData(0), statesProbsWindow.getData(1));
     		informMostProbableState(mostProbableState);
     	}
     	
-    	updateUserStateDisplay(stateToString(statePredicted), prevStateProbability);//TODO get max probability
+    	// show state predicted and its probability
+    	updateUserStateDisplay(stateToString(statePredicted), prevStateProbability);
     }
-    
+    /**
+     * calculate Most Probable State from a windowdata with the last few predictions
+     * @param states
+     * @param probs
+     * @return
+     */
     private int getMostProbableState(float[] states, float[] probs){
     	String TAG = "getMostProbableState";
     	int[] STATES = {
@@ -272,6 +301,10 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     	return STATES[maxIndex];
     }
     
+    /**
+     * play audio of th most probable state predicted
+     * @param mostProbableState
+     */
     private void informMostProbableState(int mostProbableState){
     	Toast.makeText(this, "mostProbableState: "+stateToString(mostProbableState), Toast.LENGTH_SHORT).show();
     	if(playSound){
@@ -340,6 +373,13 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     	return s;
     }
     
+    /**
+     * create the data vector to be stored in the windowData for future state prediction.
+     * each type of feature use different information from sensor data.
+     * @param linearAccel
+     * @param featuresType
+     * @return
+     */
     private float[] getDataForWindowData(float[] linearAccel, int featuresType){
 		switch(featuresType){
 		case MyFeatures2.FEATURES_TYPE:

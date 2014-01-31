@@ -111,6 +111,13 @@ public class MyFeatures4 implements IFeatures {
 		return sum/data.length;
 	}
 	
+	/**
+	 * FFTmag explained in http://www.ict.griffith.edu.au/~vlad/PhDthesis/joanne_thesis_final.pdf
+	 * size of windowdata must be a power of 2, uses features.fft.InplaceFFT
+	 * Cooley-Tukey FFT non recursive O(n log n) http://introcs.cs.princeton.edu/java/97data/InplaceFFT.java.html
+	 * @param data
+	 * @return
+	 */
 	private float[] getFFTMag(float[] data){
 		Complex[] x = new Complex[data.length];
 		for(int i = 0; i < x.length; i++){
@@ -126,6 +133,13 @@ public class MyFeatures4 implements IFeatures {
         return fftMag;
 	}
 	
+	/**
+	 * uses previous state + MyFeatures2
+	 * @param linearAccel
+	 * @param gData
+	 * @param prevState
+	 * @return
+	 */
 	public static float[] getDataForWindowData(float[] linearAccel, float[] gData, float prevState){
 		//float[] gData = {scanSD.nextFloat(), scanSD.nextFloat(), scanSD.nextFloat()};
 		

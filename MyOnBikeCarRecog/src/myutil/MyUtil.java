@@ -65,6 +65,13 @@ public class MyUtil {
     	return Math.sqrt(Math.pow(v[0], 2)+Math.pow(v[1], 2)+Math.pow(v[2], 2));
     }
 	
+	/**
+	 * to play audio from assets
+	 * @param audioPath
+	 * @param context
+	 * @param leftVolume
+	 * @param rightVolume
+	 */
 	public static void playAudio(String audioPath, Context context, float leftVolume, float rightVolume){
 		
 		final MediaPlayer myAudio = new MediaPlayer();

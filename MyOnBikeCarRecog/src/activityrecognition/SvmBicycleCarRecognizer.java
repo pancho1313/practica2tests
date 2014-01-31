@@ -16,10 +16,18 @@ import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 
+/**
+ * this class set the svm model and parameters used by svm for a prediction
+ * @author fhafon
+ *
+ */
 public class SvmBicycleCarRecognizer {
 	private String TAG = "SvmBicycleCarRecognizer";
-	private static final int wSize = 128; // 64 128
-	private static final int myFeatures = 4; // 1 2 3 4
+	// size of windowData
+	private static final int wSize = 128; // only 64 and 128 are supported 
+	
+	
+	private static final int myFeatures = 4; // 1 2 3 4 (MyFeatures1, MyFeatures2, MyFeatures3 or MyFeatures4)
 	private static final int floatsPerWindowData = getFloatsPerWindowData();
 	private Properties properties;
 	
@@ -29,10 +37,19 @@ public class SvmBicycleCarRecognizer {
         properties = assetsPropertyReader.getProperties("range."+propertiesPrefix()+"properties");
 	}
 	
+	/**
+	 * to read the correct .properties file
+	 * @return
+	 */
 	private String propertiesPrefix(){
 		return "" + wSize + "." + myFeatures + ".";
 	}
 	
+	/**
+	 * set scale parameters to scale features and set .model file to use in svm prediction
+	 * @param intent
+	 * @param svmRecognizerIntentService
+	 */
 	public void predictState(Intent intent, SvmRecognizerIntentService svmRecognizerIntentService) {
 		String modelFile = Environment.getExternalStorageDirectory() + "/trainingBC."+propertiesPrefix()+"txt.model";
 		

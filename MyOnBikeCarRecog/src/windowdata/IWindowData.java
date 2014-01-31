@@ -1,5 +1,10 @@
 package windowdata;
 
+/**
+ * 
+ * @author fhafon
+ *
+ */
 public interface IWindowData
 {
 	/**

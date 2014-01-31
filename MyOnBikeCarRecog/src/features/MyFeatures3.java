@@ -27,6 +27,9 @@ public class MyFeatures3 implements IFeatures {
 		return FEATURES_TYPE;
 	}
 	
+	/**
+	 * uses previous state + MyFeatures1
+	 */
 	public float[] getFeatures(IWindowData windowData){
 		float[] data = windowData.getData(0);
 		float mean = mean(data);
@@ -40,10 +43,10 @@ public class MyFeatures3 implements IFeatures {
 		float bikeNotMoving=0, bikeCruise=0, bikeAccelerating=0, bikeBreaking=0;
 		float carNotMoving=0, carCruise=0, carAccelerating=0, carBreaking=0;
 		float prev = (windowData.getData(1)[0]);
-		int prevState = (int)prev;
-		float prevProb = prev - prevState;
+		int prevState = (int)prev; // integer part is the prevState
+		float prevProb = prev - prevState; // decimal part is the probability (<1.0)
 		if(prevProb<0.1f)
-			prevProb = 1;
+			prevProb = 1; // if no probability was especified
 		if(prevState == SvmRecognizerIntentService.BIKE_NOT_MOVING){
 			bikeNotMoving = prevProb;
 		}else if(prevState == SvmRecognizerIntentService.BIKE_CRUISE){
@@ -63,7 +66,7 @@ public class MyFeatures3 implements IFeatures {
 		}else if(prevState == SvmRecognizerIntentService.CAR_BREAKING){
 			carBreaking = prevProb;
 		}
-		
+		// considerate bike_not_moving and car_not_moving as the same state 
 		else{ // eg: prevState < 0
 			bikeNotMoving = prevProb;
 			carNotMoving = prevProb;
@@ -91,6 +94,13 @@ public class MyFeatures3 implements IFeatures {
 		return sum/data.length;
 	}
 	
+	/**
+	 * FFTmag explained in http://www.ict.griffith.edu.au/~vlad/PhDthesis/joanne_thesis_final.pdf
+	 * size of windowdata must be a power of 2, uses features.fft.InplaceFFT
+	 * Cooley-Tukey FFT non recursive O(n log n) http://introcs.cs.princeton.edu/java/97data/InplaceFFT.java.html
+	 * @param data
+	 * @return
+	 */
 	private float[] getFFTMag(float[] data){
 		Complex[] x = new Complex[data.length];
 		for(int i = 0; i < x.length; i++){

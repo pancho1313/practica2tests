@@ -51,6 +51,12 @@ public class MyFeatures2 implements IFeatures {
 				meanLAccV, stdevLAccV, meanFftMagLAccV, stDevFftMagLAccV};
 	}
 	
+	/**
+	 * standar deviation
+	 * @param mean
+	 * @param data
+	 * @return
+	 */
 	private float stDev(float mean, float[] data){
 		double sum = 0;
 		for(float d : data){
@@ -67,6 +73,13 @@ public class MyFeatures2 implements IFeatures {
 		return sum/data.length;
 	}
 	
+	/**
+	 * FFTmag explained in http://www.ict.griffith.edu.au/~vlad/PhDthesis/joanne_thesis_final.pdf
+	 * size of windowdata must be a power of 2, uses features.fft.InplaceFFT
+	 * Cooley-Tukey FFT non recursive O(n log n) http://introcs.cs.princeton.edu/java/97data/InplaceFFT.java.html
+	 * @param data
+	 * @return
+	 */
 	private float[] getFFTMag(float[] data){
 		Complex[] x = new Complex[data.length];
 		for(int i = 0; i < x.length; i++){
@@ -82,6 +95,12 @@ public class MyFeatures2 implements IFeatures {
         return fftMag;
 	}
 	
+	/**
+	 * separate linnear acceleration in horizontal and vertical vectors using gravity vector
+	 * @param linearAccel
+	 * @param gData
+	 * @return
+	 */
 	public static float[] getDataForWindowData(float[] linearAccel, float[] gData){
 		//float[] gData = {scanSD.nextFloat(), scanSD.nextFloat(), scanSD.nextFloat()};
 		

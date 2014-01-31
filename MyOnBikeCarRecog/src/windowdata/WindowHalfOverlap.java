@@ -2,6 +2,11 @@ package windowdata;
 
 import android.util.Log;
 
+/**
+ * window data with 50% overlapping
+ * @author fhafon
+ *
+ */
 public class WindowHalfOverlap implements IWindowData
 {
 	private String TAG = "WindowHalfOverlap";
