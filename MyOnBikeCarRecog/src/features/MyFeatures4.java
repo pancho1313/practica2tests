@@ -57,32 +57,34 @@ public class MyFeatures4 implements IFeatures {
 		// prev state
 		float bikeNotMoving=0, bikeCruise=0, bikeAccelerating=0, bikeBreaking=0;
 		float carNotMoving=0, carCruise=0, carAccelerating=0, carBreaking=0;
-		int prevState = (int)(windowData.getData(2)[0]);
+		float prev = (windowData.getData(2)[0]);
+		int prevState = (int)prev;
+		float prevProb = prev - prevState;
+		if(prevProb<0.1f)
+			prevProb = 1;
 		if(prevState == SvmRecognizerIntentService.BIKE_NOT_MOVING){
-			bikeNotMoving = 1;
-			//carNotMoving = 1;
+			bikeNotMoving = prevProb;
 		}else if(prevState == SvmRecognizerIntentService.BIKE_CRUISE){
-			bikeCruise = 1;
+			bikeCruise = prevProb;
 		}else if(prevState == SvmRecognizerIntentService.BIKE_ACCELERATING){
-			bikeAccelerating = 1;
+			bikeAccelerating = prevProb;
 		}else if(prevState == SvmRecognizerIntentService.BIKE_BREAKING){
-			bikeBreaking = 1;
+			bikeBreaking = prevProb;
 		}
 		
 		else if(prevState == SvmRecognizerIntentService.CAR_NOT_MOVING){
-			//bikeNotMoving = 1;
-			carNotMoving = 1;
+			carNotMoving = prevProb;
 		}else if(prevState == SvmRecognizerIntentService.CAR_CRUISE){
-			carCruise = 1;
+			carCruise = prevProb;
 		}else if(prevState == SvmRecognizerIntentService.CAR_ACCELERATING){
-			carAccelerating = 1;
+			carAccelerating = prevProb;
 		}else if(prevState == SvmRecognizerIntentService.CAR_BREAKING){
-			carBreaking = 1;
+			carBreaking = prevProb;
 		}
 		
 		else{ // eg: prevState < 0
-			bikeNotMoving = 1;
-			carNotMoving = 1;
+			bikeNotMoving = prevProb;
+			carNotMoving = prevProb;
 		}
 		
 		return new float[]{

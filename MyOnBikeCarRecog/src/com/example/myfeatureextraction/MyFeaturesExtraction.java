@@ -113,8 +113,6 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
         mSensorManager.registerListener(this, gSensor, sensorDelay);
         
         refreshTextView();
-        
-        Log.d(TAG, "prevState="+3.43+" (int)="+(int)3.43);
     }
 
     protected void onPause() {
