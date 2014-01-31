@@ -24,7 +24,7 @@ public class SvmRecognizerIntentService extends IntentService {
     }
 	
 	protected void onHandleIntent(Intent intent) {
-		(new SvmBicycleCarRecognizer()).predictState(intent, this);
+		(new SvmBicycleCarRecognizer(this.getApplicationContext())).predictState(intent, this);
 	}
 	
 	public void predictState(
@@ -44,7 +44,7 @@ public class SvmRecognizerIntentService extends IntentService {
 		// predict
 		int[] statePredicted = new int[NUMBER_OF_LABELS];
 		double[] predictionsProbabilities = new double[NUMBER_OF_LABELS];
-		SvmRecognizer svmRecognizer = new SvmRecognizer(scaleH, scaleL, featuresMin, featuresMax);
+		SvmRecognizer svmRecognizer = new SvmRecognizer(scaleH, scaleL, featuresMin, featuresMax, this.getApplicationContext());
 		if(svmRecognizer.predict(features, modelFile, statePredicted, predictionsProbabilities)){
 			String s = "";
 			for(int i : statePredicted)

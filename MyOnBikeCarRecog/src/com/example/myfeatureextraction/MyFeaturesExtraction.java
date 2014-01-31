@@ -150,14 +150,9 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     }
     
     private void updateUserStateDisplay(String statePredicted, float predictionProbability){
-    	// TODO
     	String s = statePredicted + " " + predictionProbability + "\n";
     	textView = s + textView;
     	refreshTextView();
-    	
-    	//TODO
-    	if(playSound)
-    		MyUtil.playAudio("beep_high.mp3", this, 0.5f, 0.2f);
     }
     
     private void refreshTextView(){
@@ -228,7 +223,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     	
     	if(statesProbsWindow.addData(new float[]{statePredicted, prevStateProbability})){
     		int mostProbableState = getMostProbableState(statesProbsWindow.getData(0), statesProbsWindow.getData(1));
-    		Toast.makeText(this, "mostProbableState: "+stateToString(mostProbableState), Toast.LENGTH_SHORT).show();
+    		informMostProbableState(mostProbableState);
     	}
     	
     	updateUserStateDisplay(stateToString(statePredicted), prevStateProbability);//TODO get max probability
@@ -275,6 +270,43 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     	}
     	
     	return STATES[maxIndex];
+    }
+    
+    private void informMostProbableState(int mostProbableState){
+    	Toast.makeText(this, "mostProbableState: "+stateToString(mostProbableState), Toast.LENGTH_SHORT).show();
+    	if(playSound){
+    		String audioPath ="";
+    		switch(mostProbableState){
+    		case SvmRecognizerIntentService.BIKE_NOT_MOVING:
+    			audioPath = "not_moving.mp3";
+    			break;
+    		case SvmRecognizerIntentService.BIKE_CRUISE:
+    			audioPath = "cruise.mp3";
+    			break;
+    		case SvmRecognizerIntentService.BIKE_ACCELERATING:
+    			audioPath = "accelerating.mp3";
+    			break;
+    		case SvmRecognizerIntentService.BIKE_BREAKING:
+    			audioPath = "breaking.mp3";
+    			break;
+    		case SvmRecognizerIntentService.CAR_NOT_MOVING:
+    			audioPath = "not_moving.mp3";
+    			break;
+    		case SvmRecognizerIntentService.CAR_CRUISE:
+    			audioPath = "cruise.mp3";
+    			break;
+    		case SvmRecognizerIntentService.CAR_ACCELERATING:
+    			audioPath = "accelerating.mp3";
+    			break;
+    		case SvmRecognizerIntentService.CAR_BREAKING:
+    			audioPath = "breaking.mp3";
+    			break;
+    		default:
+    			audioPath = "beep_high.mp3";
+    		}
+    		
+    		MyUtil.playAudio(audioPath, this, 1.0f, 0.5f);
+    	}
     }
     
     private String stateToString(int state){

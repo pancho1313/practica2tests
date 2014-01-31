@@ -1,19 +1,24 @@
 package activityrecognition;
 
+import java.util.Properties;
+
+import myutil.AssetsPropertyReader;
+
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 public class SvmRecognizer implements IActivityRecognizer {
 
 	private static String TAG = "SvmRecognizer";
 	// scale
-    //private Properties properties;
+    
     float scaleZero;
 	float scaleDif;
 	float[] featuresZero;
 	float[] featuresDif;
 	
-    public SvmRecognizer(float scaleH, float scaleL, float[] featuresMin, float[] featuresMax){
-        // scale
+    public SvmRecognizer(float scaleH, float scaleL, float[] featuresMin, float[] featuresMax, Context context){
+    	// scale
         preCalculateScaleFeatures(scaleH, scaleL, featuresMin, featuresMax);
     }
 	//////////scale////////////////////////////////////////////////////////////////////
@@ -63,6 +68,21 @@ public class SvmRecognizer implements IActivityRecognizer {
 		}
 		//Log.d(TAG,s);
     	
+		//TODO delete
+		// 21 1:0.13405332 2:2.5108101 3:5.3767357 4:125.668 5:0.12746392 6:2.6173599 7:4.99017 8:117.8999 9:0.0 10:0.0 11:0.0 12:0.0 13:0.0 14:0.0 15:0.0 16:1.0 
+		/*
+		features = new float[]{
+				0.13405332f,
+				2.5108101f,
+				5.3767357f,
+				125.668f,
+				0.12746392f,
+				2.6173599f,
+				4.99017f,
+				117.8999f,
+				0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,1.0f
+		};*/
+		
     	scaleFeatures(features);
     	
     	s ="s: ";
