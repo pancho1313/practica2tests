@@ -6,15 +6,28 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+/**
+ * Used to merge libsvm training/testing files of bicycle and car. 
+ * @author job
+ *
+ */
 public class TrainingFilesMerger {
 
 	private static void p(String s){
 		System.out.print(s);
 	}
 	
+	/**
+	 * Add a prefix to the label of each class to make a difference between car and bicycle states.
+	 * Add more features if needed (MyFeatures3 and MyFeatures4 previous state)
+	 * @param features
+	 * @param trainingBike
+	 * @param trainingCar
+	 * @throws IOException
+	 */
 	private static void merge(String features, BufferedReader trainingBike, BufferedReader trainingCar) throws IOException{
-		String preFile1 = "1"; // bike
-		String preFile2 = "2"; // car
+		String preFile1 = "1"; // bike {1 2 3 4} --> {11 12 13 14}
+		String preFile2 = "2"; // car  {1 2 3 4} --> {21 22 23 24}
 		
 		boolean firstLine = true;
 		

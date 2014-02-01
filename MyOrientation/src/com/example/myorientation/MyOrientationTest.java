@@ -19,6 +19,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * This activity tests Low-pass filters to separate gravity from simple 3-axial accelerometer data.
+ * Then it calculates vertical and horizontal linear acceleration.
+ * Shows on screen the max vertical and horizontal linear acceleration (with a reset button).
+ * @author job
+ *
+ */
 public class MyOrientationTest extends Activity implements SensorEventListener {
 	private String TAG;
 	private SensorManager mSensorManager;
@@ -27,6 +34,9 @@ public class MyOrientationTest extends Activity implements SensorEventListener {
     private float[] m_rotationMatrix;
     private boolean newData;
     
+    /**
+     * this application only uses the standard accelerometer sensor
+     */
     private final int sensorType = Sensor.TYPE_ACCELEROMETER;
     
     //displays
@@ -37,6 +47,16 @@ public class MyOrientationTest extends Activity implements SensorEventListener {
     
     
     // Low-Pass Filters ////////////////////////////////////////////////////////////////
+    /*
+     * uses:
+     * 
+     * 		package com.kircherelectronics.lowpasslinearacceleration.filter
+     * 
+     * implementation from:
+     * 
+     * 		https://github.com/BokiSoft/LowPassLinearAcceleration
+     * 		http://www.kircherelectronics.com/blog/index.php/blog-articles/articles/85-blog/android-articles/android-sensor-articles/76-low-pass-filter-linear-acceleration
+     */
   
     private int sensorDelay = SensorManager.SENSOR_DELAY_FASTEST;
     
@@ -133,23 +153,29 @@ public class MyOrientationTest extends Activity implements SensorEventListener {
     	if (event.sensor.getType() != sensorType)
             return;
     	
-    	// get gravity and linear acceleration
+    	// acceleration data from m/s2 to g's
     	float[] gAccel = event.values.clone();
     	gAccel[0] = gAccel[0] / SensorManager.GRAVITY_EARTH;
     	gAccel[1] = gAccel[1] / SensorManager.GRAVITY_EARTH;
     	gAccel[2] = gAccel[2] / SensorManager.GRAVITY_EARTH;
 
+    	// get gravity and linear acceleration from selected filter
     	float[][] local_grav_linnearAcc;
     	if(lpfUsed == USE_LPF_WIKI)
     		local_grav_linnearAcc = lpfWiki.addSamples(gAccel);
     	else
     		local_grav_linnearAcc = lpfAndDev.addSamples(gAccel);
     	
+    	// next: get global linear acceleration from local coordinates (android position)
     	float[] localGravity = local_grav_linnearAcc[0];
     	float[] localLinnearAcc = local_grav_linnearAcc[1];
     	float[] globalLinnearAcc = new float[3];
     	
-    	// calculate magDir TODO
+    	/*
+    	 *  calculate magDir (direction of magnetic north)
+    	 *  in this case we just need an horizontal vector so
+    	 *  the cross product of gravity and an local edge is enough
+    	 */
     	float[] magDir;
     	float[] x = {1f,0f,0f};
     	float[] y = {0f,1f,0f};
@@ -162,6 +188,7 @@ public class MyOrientationTest extends Activity implements SensorEventListener {
     	double lency = vecLength(cy);
     	double lencz = vecLength(cz);
     	
+    	// select the largest cross product for better precision
     	magDir = cx;
     	double lenmagDir = lencx;
     	if(lency > lenmagDir){
@@ -172,7 +199,7 @@ public class MyOrientationTest extends Activity implements SensorEventListener {
     		magDir = cz;
     	}
     	
-    	// get global coordinates
+    	// get global coordinates using SensorManager.getRotationMatrix
     	if (SensorManager.getRotationMatrix(m_rotationMatrix, null,
     			localGravity, magDir)) {
 			/*
@@ -205,8 +232,10 @@ public class MyOrientationTest extends Activity implements SensorEventListener {
     		globalLinnearAcc[1] = resp[1];
     		globalLinnearAcc[2] = resp[2];
     		
-    		// set vertical and horizontal Gs
+    		// set vertical (globalLinnearAcc[2]) and horizontal (hGs) Gs
     		float hGs = (float)Math.sqrt(Math.pow(globalLinnearAcc[0], 2) + Math.pow(globalLinnearAcc[1], 2));
+    		
+    		// update max vertical and horizontal global linear acceleration
     		if(globalLinnearAcc[2] < minVGs)
     			minVGs = globalLinnearAcc[2];
     		if(globalLinnearAcc[2] > maxVGs)
@@ -215,12 +244,21 @@ public class MyOrientationTest extends Activity implements SensorEventListener {
     			minHGs = hGs;
     		if(hGs > maxHGs)
     			maxHGs = hGs;
+    		
+    		// refresh user's display with max vertical and horizontal global linear acceleration
     		verticalGs.setText("maxVGs: "+maxVGs +"  minVGs: "+minVGs);
     		horizontalGs.setText("maxHGs: "+maxHGs +"  minHGs: "+minHGs);
 		}
     }
 
     // vector utils
+    
+    /**
+     * cross product between vectors a b
+     * @param a
+     * @param b
+     * @return
+     */
     private float[] cross(float[] a, float[] b){
     	float[] c = new float[3];
     	
@@ -234,6 +272,10 @@ public class MyOrientationTest extends Activity implements SensorEventListener {
     	return Math.sqrt(Math.pow(v[0], 2)+Math.pow(v[1], 2)+Math.pow(v[2], 2));
     }
     
+    /**
+     * reset max vertical and horizontal global linear acceleration to zero
+     * @param v
+     */
     public void action(View v){
     	Log.d(TAG, "action");
     	minHGs = 0;

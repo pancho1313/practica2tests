@@ -19,6 +19,12 @@ import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+/**
+ * este servicio se ejecuta cada vez que se detecta una actividad con GooglePlayServices,
+ * luego envia una notificacion a MainActivity con la actividad reconocida y la confianza del resultado.
+ * @author job
+ *
+ */
 public class ActivityRecognitionService extends IntentService	 {
 
 	private MediaPlayer myAudio;
@@ -150,6 +156,10 @@ public class ActivityRecognitionService extends IntentService	 {
 		myAudio.start();
 	}
 
+	/**
+	 * para establecer un servicio foreground (screen off)
+	 * @param i
+	 */
 	private void handleCommand(Intent i){
 		NotificationCompat.Builder mBuilder =
 		        new NotificationCompat.Builder(this)

@@ -12,13 +12,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 /**
- * activity used to initiate LinearAccelerationService 
+ * activity used to initiate LinearAccelerationService.
+ * Warning: the "start" button must be pressed manually at the same time that the "start" button of ActivityMarker
  * @author fhafon
  *
  */
 public class ActivityRegistrator extends Activity {
 	public static final String TAG = "ActivityRegistrator";
 	
+	/**
+	 * this are the states used by ActivityMarker to register the user's activity
+	 */
 	public static final int IGNORE = -1; // Must be <0
 	public static final int NOT_MOVING = 1; // Must be >0
 	public static final int CRUISE = 2; // Must be >0

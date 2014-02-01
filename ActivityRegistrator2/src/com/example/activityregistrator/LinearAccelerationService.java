@@ -18,12 +18,17 @@ import android.util.Log;
 import android.widget.Toast;
 
 
-
+/**
+ * this service receives sensor data from the linear accelerometer and gravity sensor,
+ * and stores it in a file with a time stamp to be processed by TrainingFileGenerator.
+ * @author job
+ *
+ */
 public class LinearAccelerationService extends Service implements SensorEventListener {
 	private String TAG = ActivityRegistrator.TAG;
 	private SensorManager mSensorManager;
     private Sensor mSensor, gSensor;
-    private final int sensorType = Sensor.TYPE_LINEAR_ACCELERATION;//TODO TYPE_LINEAR_ACCELERATION TYPE_ACCELEROMETER
+    private final int sensorType = Sensor.TYPE_LINEAR_ACCELERATION;
     private long initTime;
     private int dataLength;
     private String[] dataCache;
@@ -60,6 +65,9 @@ public class LinearAccelerationService extends Service implements SensorEventLis
         initStopReciever();
     }
 
+    /**
+     * start service in foreground and save date in the beginning of file
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
@@ -73,6 +81,9 @@ public class LinearAccelerationService extends Service implements SensorEventLis
         return null;
     }
 
+    /**
+     * unregister sensors and receivers
+     */
     @Override
     public void onDestroy() {
     	super.onDestroy();
@@ -81,10 +92,18 @@ public class LinearAccelerationService extends Service implements SensorEventLis
 		mSensorManager.unregisterListener(this);
     }
     
+    /**
+     * the time stamp saved at the beginning of a line starts when the service is created
+     * @return
+     */
     private long getServiceTime(){
     	return System.currentTimeMillis() - initTime;
     }
 
+    /**
+     * save sensor data to file when dataCache is full, and restore dataCache
+     * @param data
+     */
     private void updateData(float[] data){
     	//Log.d(TAG, "updateData");
     	if(dataIndex < dataLength){
@@ -99,6 +118,9 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     	}
     }
     
+    /**
+     * initiate SaveFileIntentService to save dataCache in background
+     */
     private void saveData(){
     	
     	Intent intent = new Intent(this, SaveFileIntentService.class);
@@ -111,6 +133,9 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     	Log.d(TAG, "pls saveData()");
     }
     
+    /**
+     * save date in first line of file
+     */
     private void saveDate(){	
     	Intent intent = new Intent(this, SaveFileIntentService.class);
     	String[] startDate = {"T " + new Date().toString()};
@@ -119,6 +144,10 @@ public class LinearAccelerationService extends Service implements SensorEventLis
     	Log.d(TAG, "pls saveData()");
     }
     
+    /**
+     * this service is started in foreground (with a notification) to avoid being killed 
+     * @param i
+     */
     private void handleCommand(Intent i){
 		NotificationCompat.Builder mBuilder =
 		        new NotificationCompat.Builder(this)
@@ -132,6 +161,9 @@ public class LinearAccelerationService extends Service implements SensorEventLis
 		this.startForeground(333, mBuilder.build());
 	}
     
+    /**
+     * this service ends with a message from ActivityRegistrator
+     */
     private void initStopReciever(){
     	reciever = new BroadcastReceiver() {
 		    @Override

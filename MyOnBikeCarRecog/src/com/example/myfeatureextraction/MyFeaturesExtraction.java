@@ -44,7 +44,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     private float prevStateProbability;
     private WindowHalfOverlap statesProbsWindow;
     
-    // global message identifier used to comunicate svm predictions
+    // global message identifier used to communicate svm predictions
     public static final String sendToBicycleCarSVM = "com.example.myfeatureextraction.BICYCLE_CAR_PREDICTION";
     
     // set sensor type and delay
@@ -75,7 +75,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 		gData = new float[3]; // vector with gravity sensor data
 		prevState = prevStateProbability = 0f;
 		
-		// this window acumulates the last state predictions for better activity aproximation
+		// this window accumulates the last state predictions for better activity approximation
 		int statesProbsWindowSize = 4; // use the last 4 state predictions
 		int floatsPerWindowData = 2; // state predicted and its probability
 		statesProbsWindow = new WindowHalfOverlap(statesProbsWindowSize, floatsPerWindowData);
@@ -94,7 +94,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_feature_extraction);
 		
-		//evitar que se apague la pantalla
+		//keep screen on
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
 		init();
@@ -143,7 +143,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
 
     /**
-     * here we recieve an preprocess the sensors (linnear acc. and gravity) data
+     * here we receive an pre-process the sensors (linear acc. and gravity) data
      */
     public void onSensorChanged(SensorEvent event) {
     	
@@ -151,7 +151,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
 	    	// get gravity and linear acceleration
 	    	float[] linearAccel = event.values.clone();
 	    	
-	    	// add linnear acc. data to the window data
+	    	// add linear acc. data to the window data
 	    	if(windowData.addData(getDataForWindowData(linearAccel, myFeatures.getFeaturesType()))){
 	    		// complete windowData, we have to calculate the features 
 	    		
@@ -226,7 +226,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     	int statePredicted = intent.getIntExtra("statePredicted",-1);
     	double stateProbability = intent.getDoubleExtra("stateProbability", -1);
     	
-    	// necesary condition to support prevStateProbabilityMode (on README)
+    	// Necessary condition to support prevStateProbabilityMode (on README)
     	if(stateProbability >= 1.0)
     		stateProbability = 0.99;
 
@@ -276,7 +276,6 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     	Log.d(TAG, "-------------------");
     	for(int i = 0; i < states.length; i++){
     		Log.d(TAG,"(int)(states[i])="+(int)(states[i]));
-    		//int index = Arrays.asList(STATES).indexOf((int)(states[i]));
     		int index = 0;
     		for(int j = 0; j < STATES.length; j++){
     			if((int)(states[i]) == STATES[j]){
@@ -302,7 +301,7 @@ public class MyFeaturesExtraction extends Activity implements SensorEventListene
     }
     
     /**
-     * play audio of th most probable state predicted
+     * play audio of the most probable state predicted
      * @param mostProbableState
      */
     private void informMostProbableState(int mostProbableState){

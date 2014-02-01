@@ -18,33 +18,20 @@ import features.MyFeatures2;
 import features.MyFeatures3;
 import features.MyFeatures4;
 
+/**
+ * generate a libsvm training file from sensorDataFile and sensorMarksFile
+ * @author job
+ *
+ */
 public class SVMTraining {
 	
 	private static String TAG = "SVMTraining"; 
 	
-	private static double vecLength(float[] v){
-    	return Math.sqrt(Math.pow(v[0], 2)+Math.pow(v[1], 2)+Math.pow(v[2], 2));
-    }
-	
-	private void save(String[] textToFile, String fileName, boolean append){
-		File file = new File(fileName);
-
-	    try {
-	        FileOutputStream f = new FileOutputStream(file, append);
-	        PrintWriter pw = new PrintWriter(f);
-	        for(int i = 0; i < textToFile.length; i++){
-	        	pw.println(textToFile[i]);
-	        }
-	        pw.flush();
-	        pw.close();
-	        f.close();
-	    } catch (FileNotFoundException e) {
-	        e.printStackTrace();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-	}
-	
+	/**
+	 * getNumberOfLines of a file to check the progress
+	 * @param file
+	 * @return
+	 */
 	private static int getNumberOfLines(File file){
 		int totalLines = 1;
 		try {
@@ -63,54 +50,7 @@ public class SVMTraining {
 		return totalLines;
 	}
 	
-	private static boolean getNumberOfLines(File file, int total, float mean){
-		
-		try {
-			double difSum = 0;
-			long last, actual;
-			int nLines = 0;
-			
-			Scanner scan = new Scanner(file);
-	    	scan.useLocale(Locale.US);
-	    	
-	    	if(scan.hasNextLine()){
-	    		scan.nextLine();
-	    		if(scan.hasNextLong() && scan.hasNextLine()){
-	    			last = scan.nextLong();
-	    			nLines++;
-	    			scan.nextLine();
-	    		}else{
-	    			scan.close();
-	    			return false;
-	    		}
-	    	}else{
-	    		scan.close();
-	    		return false;
-	    	}
-	    	
-	    	while(scan.hasNextLong()){
-	    		actual = scan.nextLong();
-	    		nLines++;
-	    		difSum += actual - last;
-	    		last = actual;
-	    		
-	    		if(scan.hasNextLine()){
-	    			scan.nextLine();
-	    		}else{
-	    			break;
-	    		}
-	    	}
-	    	
-	    	scan.close();
-	    	
-	    	total = nLines;
-	    	mean = (float) difSum/(total-1);
-	    	
-	    	return true;
-	    } catch (FileNotFoundException e1) {
-	    	return false;
-	    }
-	}
+
 	
 	private static Scanner readLine(BufferedReader br){
 		
@@ -153,43 +93,21 @@ public class SVMTraining {
 		return br;
 	}
 	
-	private void foo(){
-		BufferedReader br = null;
-		 
-		try {
- 
-			String sCurrentLine;
- 
-			br = new BufferedReader(new FileReader("C:\\testing.txt"));
- 
-			while ((sCurrentLine = br.readLine()) != null) {
-				System.out.println(sCurrentLine);
-			}
- 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (br != null)br.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-		///////////////////////////
-		String s = "10140 18.674652 4.2338295 -0.03422594 0.7854203 6.3772726 7.408367";
 
-        Scanner scan =new Scanner(s);
-        scan.useLocale(Locale.US);
-        if(scan.hasNextLong())
-        	Log.d("SvmRecognizer","scan.nextLong(): "+scan.nextLong());
-        if(scan.hasNextFloat()){
-        	Log.d("SvmRecognizer","scan.nextFloat(): "+scan.nextFloat());
-        	Log.d("SvmRecognizer","scan.nextFloat(): "+scan.nextFloat());
-        	Log.d("SvmRecognizer","scan.nextFloat(): "+scan.nextFloat());
-        }
-        scan.close();
-	}
-	
+	/**
+	 * 
+	 * @param sensorDataFolder
+	 * @param sensorDataFile
+	 * @param sensorMarksFolder
+	 * @param sensorMarksFile
+	 * @param outFolder
+	 * @param outFile
+	 * @param context
+	 * @param wSize
+	 * @param floatsPerWindowData
+	 * @param featuresType
+	 * @return
+	 */
 	public static boolean generateTrainingFile(
 			String sensorDataFolder,
 			String sensorDataFile,
@@ -202,6 +120,9 @@ public class SVMTraining {
 			int floatsPerWindowData,
 			int featuresType){
 		
+		/**
+		 * windowData and type of features to use for the training file
+		 */
 	    IWindowData windowData = new WindowHalfOverlap(wSize, floatsPerWindowData);
 	    IFeatures myFeatures = new MyFeatures1();
 	    if(featuresType == MyFeatures2.FEATURES_TYPE){

@@ -2,6 +2,13 @@ package windowdata;
 
 import android.util.Log;
 
+/**
+ * This class stores a pair number elements (each element is a float[] data),
+ * and implements a 50% overlapping version of a windowData.
+ * When it fills it can returns the data stored for features analysis 
+ * @author job
+ *
+ */
 public class WindowHalfOverlap implements IWindowData
 {
 	private String TAG = "WindowHalfOverlap";
@@ -16,6 +23,12 @@ public class WindowHalfOverlap implements IWindowData
 		clean();
 	}
 	
+	/**
+	 * wSize must be pair
+	 * floatsPerData is the length of each float[] data stored in each addData(float[] data)
+	 * @param wSize
+	 * @param floatsPerData
+	 */
 	public WindowHalfOverlap(int wSize, int floatsPerData){
 		this.wSize = wSize;
 		this.floatsPerData = floatsPerData;
@@ -53,10 +66,17 @@ public class WindowHalfOverlap implements IWindowData
 		return true;
 	}
 	
+	/**
+	 * Each element of a windowData is a float[] data. So if windowData=
+	 * {{a,b},{c,d},{e,f},{g,h}} then getData(0)={a,c,e,g} and getData(1)={b,d,f,h}
+	 */
 	public float[] getData(int dataIndex){
 		return window[dataIndex];
 	}
 	
+	/**
+	 * reset windowData
+	 */
 	public void clean(){
 		window = new float[floatsPerData][wSize];
 		nextIndex = 0;

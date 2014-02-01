@@ -13,8 +13,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * this activity is used to save time stamps in a file, marking the beginning and end of
+ * the activities that the user registers with the buttons.
+ * The file generated is later processed by TrainingFileGenerator.
+ * Warning: the "start" button must be manually pressed at the same time that the "start" button of ActivityRegistrator
+ * @author job
+ *
+ */
 public class ActivityMarker extends Activity {
-
 	private final int STOPPED = 0;
 	private final int STARTED = 1;
 	private int markerState;

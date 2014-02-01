@@ -63,6 +63,13 @@ public class MyFeatures2 implements IFeatures {
 		return sum/data.length;
 	}
 	
+	/**
+	 * FFTmag explained in http://www.ict.griffith.edu.au/~vlad/PhDthesis/joanne_thesis_final.pdf
+	 * size of windowdata must be a power of 2, uses features.fft.InplaceFFT
+	 * Cooley-Tukey FFT non recursive O(n log n) http://introcs.cs.princeton.edu/java/97data/InplaceFFT.java.html
+	 * @param data
+	 * @return
+	 */
 	private float[] getFFTMag(float[] data){
 		Complex[] x = new Complex[data.length];
 		for(int i = 0; i < x.length; i++){

@@ -33,6 +33,13 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
 
+/**
+ * Esta actividad prueba la api de GooglePlayServices para el reconocimiento de actividad.
+ * Da la opcion de guardar estadisticas con el porcentaje de cada actividad reconocida.
+ * Requiere la libreria google-play-services_lib
+ * @author job
+ *
+ */
 public class MainActivity extends Activity implements GooglePlayServicesClient.ConnectionCallbacks,GooglePlayServicesClient.OnConnectionFailedListener {
 
 	private ActivityRecognitionClient arclient;

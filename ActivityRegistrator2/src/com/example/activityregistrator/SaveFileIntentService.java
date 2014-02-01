@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.util.Log;
 import myutil.*;
 
+/**
+ * used by LinearAccelerationService to save to file Strings
+ * @author job
+ *
+ */
 public class SaveFileIntentService extends IntentService {
 
 	private String TAG = ActivityRegistrator.TAG;
